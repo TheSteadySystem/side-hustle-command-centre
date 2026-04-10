@@ -1,7 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Anthropic from "@anthropic-ai/sdk";
 
-export const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
+let _anthropic: Anthropic | null = null;
+
+function getAnthropic(): Anthropic {
+  if (!_anthropic) {
+    const key = process.env.ANTHROPIC_API_KEY;
+    if (!key) throw new Error("ANTHROPIC_API_KEY env var missing");
+    _anthropic = new Anthropic({ apiKey: key });
+  }
+  return _anthropic;
+}
+
+export const anthropic = new Proxy({} as Anthropic, {
+  get(_, prop) {
+    return (getAnthropic() as any)[prop];
+  },
 });
 
 export const AI_COACH_MODEL =
