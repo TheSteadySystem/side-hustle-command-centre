@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-color: #B8860B;
+  --brand-color-10: rgba(184, 134, 11, 0.1);
+  --brand-color-20: rgba(184, 134, 11, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0C0B0A;
+  color: #F5F0E8;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #141312;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2825;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3A3835;
+}
+
+/* Brand color utilities */
+.brand-bg {
+  background-color: var(--brand-color);
+}
+.brand-text {
+  color: var(--brand-color);
+}
+.brand-border {
+  border-color: var(--brand-color);
+}
+.brand-bg-10 {
+  background-color: var(--brand-color-10);
+}
+.brand-bg-20 {
+  background-color: var(--brand-color-20);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--brand-color);
+  outline-offset: 2px;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

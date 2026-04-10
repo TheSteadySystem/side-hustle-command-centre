@@ -1,0 +1,219 @@
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { Workspace } from "@/lib/types";
+import WelcomeScreen from "@/components/WelcomeScreen";
+import Navigation from "@/components/Navigation";
+import MessagePackModal from "@/components/MessagePackModal";
+import Dashboard from "@/components/Dashboard";
+import LaunchRunway from "@/components/LaunchRunway";
+import MoneyTracker from "@/components/MoneyTracker";
+import ContentEngine from "@/components/ContentEngine";
+import OfferBuilder from "@/components/OfferBuilder";
+import AICoach from "@/components/AICoach";
+
+type Tab =
+  | "dashboard"
+  | "runway"
+  | "money"
+  | "content"
+  | "offer"
+  | "coach";
+
+const TOKEN_KEY = "shcc_token";
+
+export default function WorkspacePage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const searchParams = useSearchParams();
+  const [workspace, setWorkspace] = useState<Workspace | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>("dashboard");
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [messagePackOpen, setMessagePackOpen] = useState(false);
+
+  const fetchWorkspace = useCallback(async (token: string) => {
+    try {
+      const res = await fetch(`/api/workspace/${token}`);
+      if (!res.ok) throw new Error("Workspace not found");
+      const data: Workspace = await res.json();
+      setWorkspace(data);
+
+      // Set brand color CSS variable
+      document.documentElement.style.setProperty(
+        "--brand-color",
+        data.brand_color ?? "#B8860B"
+      );
+      // Derive RGB for alpha utilities
+      const hex = (data.brand_color ?? "#B8860B").replace("#", "");
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      document.documentElement.style.setProperty(
+        "--brand-color-10",
+        `rgba(${r}, ${g}, ${b}, 0.1)`
+      );
+      document.documentElement.style.setProperty(
+        "--brand-color-20",
+        `rgba(${r}, ${g}, ${b}, 0.2)`
+      );
+    } catch {
+      setError("We couldn't find your workspace. Please check your link.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Get token from URL param or localStorage
+    const urlToken = searchParams.get("t");
+    const storedToken = localStorage.getItem(TOKEN_KEY);
+    const token = urlToken ?? storedToken;
+
+    if (!token) {
+      setError("No access token found. Please use the link from your email.");
+      setLoading(false);
+      return;
+    }
+
+    // Persist token for bookmark-without-param access
+    if (urlToken) {
+      localStorage.setItem(TOKEN_KEY, urlToken);
+    }
+
+    fetchWorkspace(token);
+
+    // Show welcome screen on first visit
+    const visitKey = `shcc_visited_${params.slug}`;
+    if (!localStorage.getItem(visitKey)) {
+      setShowWelcome(true);
+      localStorage.setItem(visitKey, "1");
+    }
+  }, [searchParams, params.slug, fetchWorkspace]);
+
+  // Handle refilled=true param from Stripe success
+  useEffect(() => {
+    if (searchParams.get("refilled") === "true") {
+      const token = searchParams.get("t") ?? localStorage.getItem(TOKEN_KEY);
+      if (token) fetchWorkspace(token);
+    }
+  }, [searchParams, fetchWorkspace]);
+
+  const updateWorkspace = useCallback(
+    async (field: string, value: unknown) => {
+      const token =
+        searchParams.get("t") ?? localStorage.getItem(TOKEN_KEY) ?? "";
+      const res = await fetch("/api/workspace/update", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token: token, field, value }),
+      });
+      if (res.ok && workspace) {
+        setWorkspace({ ...workspace, [field]: value });
+      }
+    },
+    [workspace, searchParams]
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div
+            className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto brand-border"
+            style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
+          />
+          <p className="text-text-muted text-sm">Loading your command centre...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !workspace) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center space-y-4 max-w-md">
+          <p className="text-text-primary text-lg font-medium">
+            {error ?? "Something went wrong."}
+          </p>
+          <p className="text-text-muted text-sm">
+            Check the link in your welcome email, or contact{" "}
+            <a
+              href="mailto:hello@sidehustlecommandcentre.com"
+              className="underline brand-text"
+            >
+              hello@sidehustlecommandcentre.com
+            </a>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const token =
+    searchParams.get("t") ?? localStorage.getItem(TOKEN_KEY) ?? "";
+
+  return (
+    <>
+      {showWelcome && (
+        <WelcomeScreen
+          workspace={workspace}
+          onDismiss={() => setShowWelcome(false)}
+        />
+      )}
+
+      <div className="min-h-screen flex flex-col">
+        <Navigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          businessName={workspace.business_name}
+        />
+
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-5xl mx-auto w-full">
+          {activeTab === "dashboard" && (
+            <Dashboard workspace={workspace} onTabChange={setActiveTab} />
+          )}
+          {activeTab === "runway" && (
+            <LaunchRunway
+              workspace={workspace}
+              updateWorkspace={updateWorkspace}
+            />
+          )}
+          {activeTab === "money" && (
+            <MoneyTracker
+              workspace={workspace}
+              updateWorkspace={updateWorkspace}
+            />
+          )}
+          {activeTab === "content" && (
+            <ContentEngine
+              workspace={workspace}
+              updateWorkspace={updateWorkspace}
+            />
+          )}
+          {activeTab === "offer" && (
+            <OfferBuilder workspace={workspace} updateWorkspace={updateWorkspace} />
+          )}
+          {activeTab === "coach" && (
+            <AICoach
+              workspace={workspace}
+              token={token}
+              onOpenMessagePack={() => setMessagePackOpen(true)}
+            />
+          )}
+        </main>
+      </div>
+
+      {messagePackOpen && (
+        <MessagePackModal
+          token={token}
+          onClose={() => setMessagePackOpen(false)}
+        />
+      )}
+    </>
+  );
+}

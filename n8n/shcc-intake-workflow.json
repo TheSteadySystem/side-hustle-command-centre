@@ -1,0 +1,185 @@
+{
+  "name": "SHCC — Tally Intake → Workspace Creation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "shcc-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Tally Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Set this webhook URL in your Tally form settings"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract Tally field responses into a flat object\n// Tally sends: { data: { fields: [{key, label, value}] } }\nconst fields = $input.item.json.data?.fields ?? [];\n\nconst get = (label) => {\n  const f = fields.find(f => f.label?.toLowerCase().includes(label.toLowerCase()));\n  return f?.value ?? null;\n};\n\nconst getMulti = (label) => {\n  const f = fields.find(f => f.label?.toLowerCase().includes(label.toLowerCase()));\n  if (!f?.value) return [];\n  if (Array.isArray(f.value)) return f.value;\n  return [f.value];\n};\n\n// Map Tally fields to workspace schema\nconst intake = {\n  buyer_name: get('first name') ?? get('name'),\n  buyer_email: get('email'),\n  business_name: get('business name') ?? get('calling it'),\n  tagline: get('one sentence') ?? get('tagline'),\n  business_type: get('category') ?? get('describes your business'),\n  platforms: getMulti('sell') ?? getMulti('find customers') ?? getMulti('platforms'),\n  revenue_model: get('make money') ?? get('revenue'),\n  target_audience: get('ideal customer') ?? get('audience'),\n  launch_date: get('launch'),\n  monthly_revenue_goal: parseInt(get('monthly revenue goal') ?? get('revenue goal') ?? '0', 10) || null,\n  startup_budget: parseInt(get('invest') ?? get('budget') ?? '0', 10) || null,\n  experience_level: get('experience'),\n  brand_color: get('brand color') ?? get('colour') ?? get('color'),\n};\n\nreturn { intake };\n"
+      },
+      "id": "extract-fields",
+      "name": "Extract Tally Fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { intake } = $input.item.json;\n\n// Generate slug from business name\nfunction generateSlug(name) {\n  const base = (name ?? 'my-biz')\n    .toLowerCase()\n    .replace(/[^a-z0-9\\s]/g, '')\n    .trim()\n    .split(/\\s+/)\n    .slice(0, 2)\n    .join('-');\n  const suffix = Math.random().toString(36).substring(2, 4);\n  return `${base}-${suffix}`.substring(0, 12);\n}\n\n// Generate secure 64-char token\nfunction generateToken(len = 64) {\n  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\n  return Array.from({length: len}, () => chars[Math.floor(Math.random() * chars.length)]).join('');\n}\n\n// Derive brand color from business type if not provided\nfunction getBrandColor(type, provided) {\n  if (provided && /^#[0-9A-Fa-f]{6}$/.test(provided)) return provided;\n  const map = {\n    'Handmade': '#B8860B',\n    'Digital': '#6366F1',\n    'Service': '#0EA5E9',\n    'Food': '#F59E0B',\n    'Fashion': '#EC4899',\n    'Health': '#10B981',\n    'Creative': '#8B5CF6',\n  };\n  for (const [key, color] of Object.entries(map)) {\n    if ((type ?? '').includes(key)) return color;\n  }\n  return '#B8860B';\n}\n\nconst slug = generateSlug(intake.business_name);\nconst access_token = generateToken(64);\nconst brand_color = getBrandColor(intake.business_type, intake.brand_color);\n\nreturn {\n  intake,\n  slug,\n  access_token,\n  brand_color,\n};\n"
+      },
+      "id": "generate-ids",
+      "name": "Generate IDs & Color",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "resource": "message",
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "id"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are generating personalized business launch content. Output ONLY valid JSON, no markdown, no preamble, no explanation.\n\nThe business:\n- Name: {{ $json.intake.business_name }}\n- Type: {{ $json.intake.business_type }}\n- Tagline: {{ $json.intake.tagline }}\n- Platforms: {{ $json.intake.platforms.join(', ') }}\n- Revenue model: {{ $json.intake.revenue_model }}\n- Target audience: {{ $json.intake.target_audience }}\n- Launch date: {{ $json.intake.launch_date }}\n- Monthly goal: ${{ $json.intake.monthly_revenue_goal }}\n- Startup budget: ${{ $json.intake.startup_budget }}\n- Experience level: {{ $json.intake.experience_level }}\n\nGenerate a JSON object with these exact keys:\n\n1. \"runway\" — array of exactly 4 phase objects:\n   Each: { \"name\": string, \"items\": string[] (3-5 items) }\n   Phases: Foundation, Build, Pre-Launch, Launch Week\n   Tasks must be SPECIFIC to this business type, not generic.\n\n2. \"content_prompts\" — array of exactly 30 objects:\n   Each: { \"day\": number, \"prompt\": string, \"platform\": string, \"type\": \"Reel\"|\"Story\"|\"Carousel\"|\"Photo\"|\"Video\"|\"Post\" }\n   Prompts must reference the business name, specific products/services, and target audience.\n   Distribute across the buyer's selected platforms.\n\n3. \"offer_card\" — object:\n   { \"headline\": string, \"tagline\": string, \"what\": string, \"platforms\": string }\n\n4. \"pricing_guide\" — array of 3 objects:\n   Each: { \"tier\": \"Entry\"|\"Core\"|\"Premium\", \"range\": string, \"description\": string }\n   Price ranges and descriptions must be specific to this business type.\n\n5. \"startup_costs\" — array of 5-7 objects:\n   Each: { \"name\": string, \"amount\": number }\n   Should sum to approximately ${{ $json.intake.startup_budget ?? 500 }}.\n   Cost categories must be specific to this business type."
+            }
+          ]
+        },
+        "options": {
+          "maxTokensToSample": 4096
+        }
+      },
+      "id": "claude-generate",
+      "name": "Claude — Generate Content",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "notes": "Requires Anthropic API credential in n8n"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prev = $input.item.json;\nconst claudeOutput = prev.content?.[0]?.text ?? prev.text ?? '{}';\n\nlet generated;\ntry {\n  // Strip any markdown code fences if Claude added them\n  const cleaned = claudeOutput.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  generated = JSON.parse(cleaned);\n} catch(e) {\n  generated = { runway: [], content_prompts: [], offer_card: {}, pricing_guide: [], startup_costs: [] };\n}\n\n// Merge runway phases + startup_costs into runway_state structure\n// runway_state.phases is the array of {name, items}\n// runway_state.startup_costs is the cost breakdown\n// content_state.prompts is the 30-day calendar\n\nconst runway_state = {\n  phases: generated.runway ?? [],\n  pricing_guide: generated.pricing_guide ?? [],\n  startup_costs: generated.startup_costs ?? [],\n};\n\nconst content_state = {\n  prompts: generated.content_prompts ?? [],\n};\n\nconst offer_card = generated.offer_card ?? {};\n\n// Pass through all context\nreturn {\n  ...prev,\n  runway_state,\n  content_state,\n  offer_card,\n};\n"
+      },
+      "id": "parse-claude",
+      "name": "Parse Claude Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "resource": "row",
+        "operation": "create",
+        "tableId": "workspaces",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "slug", "fieldValue": "={{ $json.slug }}" },
+            { "fieldId": "access_token", "fieldValue": "={{ $json.access_token }}" },
+            { "fieldId": "buyer_name", "fieldValue": "={{ $json.intake.buyer_name }}" },
+            { "fieldId": "buyer_email", "fieldValue": "={{ $json.intake.buyer_email }}" },
+            { "fieldId": "business_name", "fieldValue": "={{ $json.intake.business_name }}" },
+            { "fieldId": "business_type", "fieldValue": "={{ $json.intake.business_type }}" },
+            { "fieldId": "tagline", "fieldValue": "={{ $json.intake.tagline }}" },
+            { "fieldId": "platforms", "fieldValue": "={{ JSON.stringify($json.intake.platforms) }}" },
+            { "fieldId": "revenue_model", "fieldValue": "={{ $json.intake.revenue_model }}" },
+            { "fieldId": "target_audience", "fieldValue": "={{ $json.intake.target_audience }}" },
+            { "fieldId": "launch_date", "fieldValue": "={{ $json.intake.launch_date }}" },
+            { "fieldId": "monthly_revenue_goal", "fieldValue": "={{ $json.intake.monthly_revenue_goal }}" },
+            { "fieldId": "startup_budget", "fieldValue": "={{ $json.intake.startup_budget }}" },
+            { "fieldId": "brand_color", "fieldValue": "={{ $json.brand_color }}" },
+            { "fieldId": "experience_level", "fieldValue": "={{ $json.intake.experience_level }}" },
+            { "fieldId": "runway_state", "fieldValue": "={{ JSON.stringify($json.runway_state) }}" },
+            { "fieldId": "content_state", "fieldValue": "={{ JSON.stringify($json.content_state) }}" },
+            { "fieldId": "offer_card", "fieldValue": "={{ JSON.stringify($json.offer_card) }}" },
+            { "fieldId": "milestones", "fieldValue": "[\"system_activated\"]" },
+            { "fieldId": "ai_messages_remaining", "fieldValue": "=50" }
+          ]
+        }
+      },
+      "id": "supabase-insert",
+      "name": "Supabase — Create Workspace",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "notes": "Requires Supabase credential in n8n (use service_role key)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prev = $input.item.json;\nconst appUrl = 'https://app.sidehustlecommandcentre.com';\nconst workspaceUrl = `${appUrl}/${prev.slug}?t=${prev.access_token}`;\nconst referralUrl = `${appUrl}/r/${prev.slug}`;\n\nreturn {\n  ...prev,\n  workspace_url: workspaceUrl,\n  referral_url: referralUrl,\n};\n"
+      },
+      "id": "build-urls",
+      "name": "Build URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "resendApi",
+        "fromEmail": "hello@sidehustlecommandcentre.com",
+        "toEmail": "={{ $json.intake.buyer_email }}",
+        "subject": "=Your Side Hustle Command Centre is ready, {{ $json.intake.buyer_name }}!",
+        "contentType": "html",
+        "htmlContent": "=<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><style>body{font-family:'DM Sans',system-ui,sans-serif;background:#0C0B0A;color:#F5F0E8;margin:0;padding:0}.container{max-width:600px;margin:0 auto;padding:40px 24px}.brand{color:{{ $json.brand_color }};font-weight:700;font-size:13px;letter-spacing:0.1em;text-transform:uppercase}.h1{font-size:28px;font-weight:700;line-height:1.3;margin:16px 0 8px}.subtext{color:#8A8478;font-size:15px;line-height:1.6;margin-bottom:28px}.cta{display:inline-block;background:{{ $json.brand_color }};color:#0C0B0A;font-weight:700;font-size:15px;padding:14px 32px;border-radius:12px;text-decoration:none;margin-bottom:28px}.divider{border:none;border-top:1px solid #1F1E1C;margin:28px 0}.detail{color:#D4CFC6;font-size:14px;line-height:1.7}.small{color:#4A4540;font-size:12px;line-height:1.6;margin-top:32px}</style></head><body><div class=\"container\"><p class=\"brand\">Side Hustle Command Centre</p><h1 class=\"h1\">Your command centre for<br><span style=\"color:{{ $json.brand_color }}\">{{ $json.intake.business_name }}</span> is ready.</h1><p class=\"subtext\">Everything has been built around your answers — your launch runway, 30-day content calendar, pricing guide, and AI business coach are all set up and waiting for you.</p><a href=\"{{ $json.workspace_url }}\" class=\"cta\">Open Your Command Centre &rarr;</a><hr class=\"divider\"><p class=\"detail\">What's inside:</p><ul class=\"detail\"><li>✅ Personalized launch runway (4 phases, specific to your business)</li><li>📱 30-day content calendar for {{ $json.intake.platforms.join(', ') }}</li><li>💰 Money tracker with your startup cost breakdown</li><li>⚡ Offer card + 3-tier pricing guide</li><li>🤖 AI coach with 50 free messages (already knows your business)</li></ul><hr class=\"divider\"><p class=\"detail\"><strong>Your private link:</strong><br><a href=\"{{ $json.workspace_url }}\" style=\"color:{{ $json.brand_color }}\">{{ $json.workspace_url }}</a></p><p class=\"detail\">Bookmark this link — it's your new business HQ. No login required.</p><hr class=\"divider\"><p class=\"small\">— The Steady System<br><br>Questions? Reply to this email or reach us at hello@sidehustlecommandcentre.com</p></div></body></html>"
+      },
+      "id": "send-email",
+      "name": "Resend — Welcome Email",
+      "type": "n8n-nodes-base.resend",
+      "typeVersion": 1,
+      "position": [1780, 300],
+      "notes": "Requires Resend API credential in n8n"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"slug\": \"{{ $json.slug }}\"}"
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2000, 300]
+    }
+  ],
+  "connections": {
+    "Tally Webhook": {
+      "main": [[{ "node": "Extract Tally Fields", "type": "main", "index": 0 }]]
+    },
+    "Extract Tally Fields": {
+      "main": [[{ "node": "Generate IDs & Color", "type": "main", "index": 0 }]]
+    },
+    "Generate IDs & Color": {
+      "main": [[{ "node": "Claude — Generate Content", "type": "main", "index": 0 }]]
+    },
+    "Claude — Generate Content": {
+      "main": [[{ "node": "Parse Claude Output", "type": "main", "index": 0 }]]
+    },
+    "Parse Claude Output": {
+      "main": [[{ "node": "Supabase — Create Workspace", "type": "main", "index": 0 }]]
+    },
+    "Supabase — Create Workspace": {
+      "main": [[{ "node": "Build URLs", "type": "main", "index": 0 }]]
+    },
+    "Build URLs": {
+      "main": [[{ "node": "Resend — Welcome Email", "type": "main", "index": 0 }]]
+    },
+    "Resend — Welcome Email": {
+      "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  }
+}

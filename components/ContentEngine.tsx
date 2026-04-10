@@ -1,0 +1,183 @@
+"use client";
+
+import { Workspace } from "@/lib/types";
+import { ContentPrompt } from "@/lib/types";
+import { getContentStreak } from "@/lib/utils";
+import { Check, Flame } from "lucide-react";
+
+interface Props {
+  workspace: Workspace;
+  updateWorkspace: (field: string, value: unknown) => Promise<void>;
+}
+
+const TYPE_COLORS: Record<string, string> = {
+  Reel: "#6366F1",
+  Story: "#EC4899",
+  Carousel: "#F59E0B",
+  Photo: "#10B981",
+  Video: "#0EA5E9",
+  Post: "#8B5CF6",
+};
+
+export default function ContentEngine({ workspace, updateWorkspace }: Props) {
+  const contentState = workspace.content_state ?? {};
+  const prompts: ContentPrompt[] =
+    (contentState.prompts as ContentPrompt[]) ?? [];
+  const streak = getContentStreak(contentState);
+  const platforms: string[] = workspace.platforms ?? [];
+
+  const toggleDay = async (day: number) => {
+    const key = String(day);
+    const newState = {
+      ...contentState,
+      [key]: !contentState[key],
+    };
+    await updateWorkspace("content_state", newState);
+
+    // Check milestones
+    const milestones = [...(workspace.milestones ?? [])];
+    const newStreak = getContentStreak(newState);
+    if (!milestones.includes("first_content") && newState["1"]) {
+      milestones.push("first_content");
+      await updateWorkspace("milestones", milestones);
+    }
+    if (!milestones.includes("content_week") && newStreak >= 7) {
+      milestones.push("content_week");
+      await updateWorkspace("milestones", milestones);
+    }
+  };
+
+  const doneCount = prompts.filter((p) => !!contentState[String(p.day)]).length;
+
+  if (prompts.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-text-primary text-xl font-bold">Content Engine</h2>
+        <div
+          className="rounded-xl p-8 text-center"
+          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        >
+          <p className="text-text-muted">
+            Your 30-day content calendar is being generated...
+          </p>
+          <p className="text-text-subtle text-sm mt-2">
+            It will appear here once your workspace is fully set up.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h2 className="text-text-primary text-xl font-bold">Content Engine</h2>
+        <p className="text-text-muted text-sm mt-1">
+          30 days of content tailored to{" "}
+          {platforms.length > 0 ? platforms.join(", ") : "your platforms"}
+        </p>
+      </div>
+
+      {/* Stats row */}
+      <div className="flex gap-3">
+        <div
+          className="flex-1 rounded-xl p-4 text-center"
+          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        >
+          <p className="text-2xl font-bold text-text-primary">{doneCount}/30</p>
+          <p className="text-text-subtle text-xs mt-1">Posts Done</p>
+        </div>
+        <div
+          className="flex-1 rounded-xl p-4 text-center"
+          style={{
+            backgroundColor: "#141312",
+            border: streak > 0 ? "1px solid var(--brand-color)" : "1px solid #1F1E1C",
+          }}
+        >
+          <div className="flex items-center justify-center gap-1">
+            <p
+              className="text-2xl font-bold"
+              style={{ color: streak > 0 ? "var(--brand-color)" : "#F5F0E8" }}
+            >
+              {streak}
+            </p>
+            {streak > 0 && (
+              <Flame size={18} style={{ color: "var(--brand-color)" }} />
+            )}
+          </div>
+          <p className="text-text-subtle text-xs mt-1">Day Streak</p>
+        </div>
+      </div>
+
+      {/* Content grid */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        {prompts.map((prompt) => {
+          const isDone = !!contentState[String(prompt.day)];
+          const typeColor = TYPE_COLORS[prompt.type] ?? "#8A8478";
+
+          return (
+            <button
+              key={prompt.day}
+              onClick={() => toggleDay(prompt.day)}
+              className="rounded-xl p-4 text-left transition-all hover:bg-bg-cardHover"
+              style={{
+                backgroundColor: "#141312",
+                border: isDone
+                  ? "1px solid var(--brand-color)"
+                  : "1px solid #1F1E1C",
+                opacity: isDone ? 0.7 : 1,
+              }}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: "var(--brand-color-10)",
+                        color: "var(--brand-color)",
+                      }}
+                    >
+                      Day {prompt.day}
+                    </span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full font-medium"
+                      style={{
+                        backgroundColor: `${typeColor}20`,
+                        color: typeColor,
+                      }}
+                    >
+                      {prompt.type}
+                    </span>
+                  </div>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{
+                      color: isDone ? "#4A4540" : "#D4CFC6",
+                      textDecoration: isDone ? "line-through" : "none",
+                    }}
+                  >
+                    {prompt.prompt}
+                  </p>
+                  <p className="text-text-subtle text-xs">{prompt.platform}</p>
+                </div>
+
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-all"
+                  style={{
+                    backgroundColor: isDone ? "var(--brand-color)" : "transparent",
+                    border: isDone
+                      ? "none"
+                      : "1px solid #2A2825",
+                  }}
+                >
+                  {isDone && <Check size={12} color="#0C0B0A" />}
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
