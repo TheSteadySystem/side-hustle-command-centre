@@ -68,7 +68,7 @@ const WHATS_DIFFERENT = [
 ];
 
 export default function LandingPage() {
-  const purchaseUrl = "https://sidehustlecommandcentre.com/purchase"; // Update to Etsy/Gumroad URL
+  const purchaseUrl = "https://tally.so/r/rjd0lv";
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0C0B0A", color: "#F5F0E8" }}>
