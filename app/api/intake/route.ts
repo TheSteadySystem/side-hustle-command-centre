@@ -152,11 +152,14 @@ function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string, b
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
   try {
+    console.log("INTAKE: received request");
     const body = await req.json();
 
     // Tally wraps fields under data.fields
     const fields: TallyField[] =
       body?.data?.fields ?? body?.fields ?? [];
+
+    console.log("INTAKE: parsed fields", fields.length);
 
     if (fields.length === 0) {
       return NextResponse.json({ error: "No fields received" }, { status: 400 });
@@ -187,12 +190,14 @@ export async function POST(req: NextRequest) {
       : getBrandColorFromBusinessType(intake.business_type);
 
     // 3. Call Claude to generate personalized content
+    console.log("INTAKE: calling Claude API");
     const claudeResponse = await anthropic.messages.create({
       model: AI_COACH_MODEL,
       max_tokens: 4096,
       messages: [{ role: "user", content: buildPrompt({ ...intake, brand_color }) }],
     });
 
+    console.log("INTAKE: Claude returned content");
     const rawText =
       claudeResponse.content[0].type === "text" ? claudeResponse.content[0].text : "{}";
 
@@ -224,6 +229,7 @@ export async function POST(req: NextRequest) {
     const offer_card = generated.offer_card ?? {};
 
     // 4. Insert workspace into Supabase
+    console.log("INTAKE: inserting into Supabase");
     const { data: workspace, error: dbError } = await supabase
       .from("workspaces")
       .insert({
@@ -251,12 +257,15 @@ export async function POST(req: NextRequest) {
       .select("id")
       .single();
 
+    console.log("INTAKE: Supabase insert done");
+
     if (dbError || !workspace) {
       console.error("Supabase insert error:", dbError);
       return NextResponse.json({ error: "Failed to create workspace" }, { status: 500 });
     }
 
     // 5. Send welcome email via Resend
+    console.log("INTAKE: sending email");
     const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.sidehustlecommandcentre.com";
     const workspaceUrl = `${appUrl}/${slug}?t=${access_token}`;
 
@@ -266,6 +275,7 @@ export async function POST(req: NextRequest) {
       subject: `Your Side Hustle Command Centre is ready, ${intake.buyer_name}!`,
       html:    buildEmailHtml({ ...intake, business_name: intake.business_name, platforms: intake.platforms }, workspaceUrl, brand_color),
     });
+    console.log("INTAKE: email sent");
 
     return NextResponse.json({ success: true, slug });
 
