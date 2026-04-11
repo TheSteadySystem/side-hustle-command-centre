@@ -8,8 +8,8 @@ export function generateSlug(businessName: string): string {
     .split(/\s+/)
     .slice(0, 2)
     .join("-");
-  const suffix = Math.random().toString(36).substring(2, 4);
-  return `${base}-${suffix}`.substring(0, 12);
+  const suffix = Math.random().toString(36).substring(2, 6);
+  return `${base}-${suffix}`.substring(0, 16);
 }
 
 export function generateToken(length = 64): string {

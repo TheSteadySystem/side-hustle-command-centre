@@ -228,34 +228,57 @@ export async function POST(req: NextRequest) {
 
     const offer_card = generated.offer_card ?? {};
 
-    // 4. Insert workspace into Supabase
+    // 4. Insert workspace into Supabase (retry with new slug on collision)
     console.log("INTAKE: inserting into Supabase");
-    const { data: workspace, error: dbError } = await supabase
-      .from("workspaces")
-      .insert({
-        slug,
-        access_token,
-        buyer_name:           intake.buyer_name,
-        buyer_email:          intake.buyer_email,
-        business_name:        intake.business_name,
-        business_type:        intake.business_type,
-        tagline:              intake.tagline || null,
-        platforms:            intake.platforms,
-        revenue_model:        intake.revenue_model || null,
-        target_audience:      intake.target_audience || null,
-        launch_date:          intake.launch_date || null,
-        monthly_revenue_goal: intake.monthly_revenue_goal,
-        startup_budget:       intake.startup_budget,
-        brand_color,
-        experience_level:     intake.experience_level || null,
-        runway_state,
-        content_state,
-        offer_card,
-        milestones:           ["system_activated"],
-        ai_messages_remaining: 50,
-      })
-      .select("id")
-      .single();
+    let workspace = null;
+    let dbError = null;
+    let finalSlug = slug;
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { data, error } = await supabase
+        .from("workspaces")
+        .insert({
+          slug: finalSlug,
+          access_token,
+          buyer_name:           intake.buyer_name,
+          buyer_email:          intake.buyer_email,
+          business_name:        intake.business_name,
+          business_type:        intake.business_type,
+          tagline:              intake.tagline || null,
+          platforms:            intake.platforms,
+          revenue_model:        intake.revenue_model || null,
+          target_audience:      intake.target_audience || null,
+          launch_date:          intake.launch_date || null,
+          monthly_revenue_goal: intake.monthly_revenue_goal,
+          startup_budget:       intake.startup_budget,
+          brand_color,
+          experience_level:     intake.experience_level || null,
+          runway_state,
+          content_state,
+          offer_card,
+          milestones:           ["system_activated"],
+          ai_messages_remaining: 50,
+        })
+        .select("id")
+        .single();
+
+      if (!error) {
+        workspace = data;
+        dbError = null;
+        break;
+      }
+
+      // Slug collision — regenerate and retry
+      if (error.code === "23505" && error.message.includes("slug")) {
+        console.log(`INTAKE: slug collision on "${finalSlug}", retrying...`);
+        finalSlug = generateSlug(intake.business_name || "my-biz");
+        dbError = error;
+        continue;
+      }
+
+      dbError = error;
+      break;
+    }
 
     console.log("INTAKE: Supabase insert done");
 
@@ -267,7 +290,7 @@ export async function POST(req: NextRequest) {
     // 5. Send welcome email via Resend
     console.log("INTAKE: sending email");
     const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.sidehustlecommandcentre.com";
-    const workspaceUrl = `${appUrl}/${slug}?t=${access_token}`;
+    const workspaceUrl = `${appUrl}/${finalSlug}?t=${access_token}`;
 
     await resend.emails.send({
       from:    process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com",
@@ -277,7 +300,7 @@ export async function POST(req: NextRequest) {
     });
     console.log("INTAKE: email sent");
 
-    return NextResponse.json({ success: true, slug });
+    return NextResponse.json({ success: true, slug: finalSlug });
 
   } catch (err) {
     console.error("Intake route error:", err);
