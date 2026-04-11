@@ -6,27 +6,51 @@ import { generateSlug, generateToken, getBrandColorFromBusinessType } from "@/li
 
 // ---------------------------------------------------------------------------
 // Tally field extractor
-// Tally payload: { data: { fields: [{ key, label, value }] } }
+// Tally payload: { data: { fields: [{ key, label, value, options? }] } }
+//
+// Dropdowns and multi-selects send:
+//   value: string[]  — array of selected option IDs
+//   options: { id: string; text: string }[]  — all available options
+//
+// Plain text/number/date/email fields send value as a scalar.
 // ---------------------------------------------------------------------------
-function extract(fields: { label: string; value: unknown }[], ...keywords: string[]): string {
+interface TallyField {
+  label: string;
+  value: unknown;
+  options?: { id: string; text: string }[];
+}
+
+function resolveOptions(f: TallyField): string[] {
+  if (!f.options?.length) return [];
+  const selected = Array.isArray(f.value) ? (f.value as string[]) : [String(f.value)];
+  return selected
+    .map((id) => f.options!.find((o) => o.id === id)?.text ?? "")
+    .filter(Boolean);
+}
+
+function extract(fields: TallyField[], ...keywords: string[]): string {
   const f = fields.find((f) =>
     keywords.some((kw) => f.label?.toLowerCase().includes(kw.toLowerCase()))
   );
   if (!f || f.value === null || f.value === undefined) return "";
+  // Dropdown / single-select — resolve option text
+  if (f.options?.length) return resolveOptions(f)[0] ?? "";
   if (Array.isArray(f.value)) return f.value.join(", ");
   return String(f.value);
 }
 
-function extractArray(fields: { label: string; value: unknown }[], ...keywords: string[]): string[] {
+function extractArray(fields: TallyField[], ...keywords: string[]): string[] {
   const f = fields.find((f) =>
     keywords.some((kw) => f.label?.toLowerCase().includes(kw.toLowerCase()))
   );
   if (!f || !f.value) return [];
+  // Multi-select — resolve all selected option texts
+  if (f.options?.length) return resolveOptions(f);
   if (Array.isArray(f.value)) return f.value.map(String);
   return [String(f.value)];
 }
 
-function extractNumber(fields: { label: string; value: unknown }[], ...keywords: string[]): number | null {
+function extractNumber(fields: TallyField[], ...keywords: string[]): number | null {
   const raw = extract(fields, ...keywords);
   const n = parseFloat(raw.replace(/[^0-9.]/g, ""));
   return isNaN(n) ? null : n;
@@ -131,7 +155,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     // Tally wraps fields under data.fields
-    const fields: { label: string; value: unknown }[] =
+    const fields: TallyField[] =
       body?.data?.fields ?? body?.fields ?? [];
 
     if (fields.length === 0) {
