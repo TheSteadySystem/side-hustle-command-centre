@@ -192,7 +192,7 @@ export async function POST(req: NextRequest) {
     // 3. Call Claude to generate personalized content
     console.log("INTAKE: calling Claude API");
     const claudeResponse = await anthropic.messages.create({
-      model: AI_COACH_MODEL,
+      model: process.env.INTAKE_MODEL ?? "claude-haiku-4-5-20251001",
       max_tokens: 4096,
       messages: [{ role: "user", content: buildPrompt({ ...intake, brand_color }) }],
     });
