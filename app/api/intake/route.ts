@@ -292,13 +292,16 @@ export async function POST(req: NextRequest) {
     const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.sidehustlecommandcentre.com";
     const workspaceUrl = `${appUrl}/${finalSlug}?t=${access_token}`;
 
-    await resend.emails.send({
-      from:    process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com",
+    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com";
+    console.log("INTAKE: sending email from:", fromEmail, "to:", intake.buyer_email);
+
+    const emailResult = await resend.emails.send({
+      from:    fromEmail,
       to:      intake.buyer_email,
       subject: `Your Side Hustle Command Centre is ready, ${intake.buyer_name}!`,
       html:    buildEmailHtml({ ...intake, business_name: intake.business_name, platforms: intake.platforms }, workspaceUrl, brand_color),
     });
-    console.log("INTAKE: email sent");
+    console.log("INTAKE: email result:", JSON.stringify(emailResult));
 
     return NextResponse.json({ success: true, slug: finalSlug });
 
