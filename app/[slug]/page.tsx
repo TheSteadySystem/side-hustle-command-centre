@@ -37,6 +37,19 @@ export default function WorkspacePage({
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [showWelcome, setShowWelcome] = useState(false);
   const [messagePackOpen, setMessagePackOpen] = useState(false);
+  const [generating, setGenerating] = useState(false);
+
+  const setBrandColors = useCallback((brandColor: string) => {
+    const hex = (brandColor ?? "#B8860B").replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    document.documentElement.style.setProperty("--brand-color", brandColor);
+    document.documentElement.style.setProperty("--brand-color-10", `rgba(${r}, ${g}, ${b}, 0.1)`);
+    document.documentElement.style.setProperty("--brand-color-20", `rgba(${r}, ${g}, ${b}, 0.2)`);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    document.documentElement.style.setProperty("--brand-text-on-brand", luminance > 0.5 ? "#0C0B0A" : "#F5F0E8");
+  }, []);
 
   const fetchWorkspace = useCallback(async (token: string) => {
     try {
@@ -44,31 +57,37 @@ export default function WorkspacePage({
       if (!res.ok) throw new Error("Workspace not found");
       const data: Workspace = await res.json();
       setWorkspace(data);
+      setBrandColors(data.brand_color ?? "#B8860B");
 
-      // Set brand color CSS variable
-      document.documentElement.style.setProperty(
-        "--brand-color",
-        data.brand_color ?? "#B8860B"
-      );
-      // Derive RGB for alpha utilities
-      const hex = (data.brand_color ?? "#B8860B").replace("#", "");
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      document.documentElement.style.setProperty(
-        "--brand-color-10",
-        `rgba(${r}, ${g}, ${b}, 0.1)`
-      );
-      document.documentElement.style.setProperty(
-        "--brand-color-20",
-        `rgba(${r}, ${g}, ${b}, 0.2)`
-      );
-      // Determine contrast text for brand-colored backgrounds
-      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-      document.documentElement.style.setProperty(
-        "--brand-text-on-brand",
-        luminance > 0.5 ? "#0C0B0A" : "#F5F0E8"
-      );
+      // If content needs generation, trigger it in the background
+      if (data.runway_state?.needs_generation) {
+        setGenerating(true);
+        try {
+          const genRes = await fetch("/api/workspace/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ access_token: token }),
+          });
+          if (genRes.ok) {
+            const genData = await genRes.json();
+            if (genData.success) {
+              setWorkspace((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      runway_state: genData.runway_state,
+                      content_state: genData.content_state,
+                      offer_card: genData.offer_card,
+                    }
+                  : prev
+              );
+            }
+          }
+        } catch {
+          // Generation failed silently — user sees empty states with "generating..." messages
+        }
+        setGenerating(false);
+      }
     } catch {
       setError("We couldn't find your workspace. Please check your link.");
     } finally {
@@ -128,7 +147,17 @@ export default function WorkspacePage({
   );
 
   if (loading) {
-    return <GeneratingScreen />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div
+            className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto"
+            style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
+          />
+          <p className="text-text-muted text-sm">Loading your command centre...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error || !workspace) {
@@ -170,6 +199,8 @@ export default function WorkspacePage({
           onTabChange={setActiveTab}
           businessName={workspace.business_name}
         />
+
+        {generating && <GeneratingBanner />}
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-5xl mx-auto w-full">
           {activeTab === "dashboard" && (
@@ -223,42 +254,39 @@ export default function WorkspacePage({
 }
 
 // ---------------------------------------------------------------------------
-// Animated loading screen with progress messages (shown during first-visit generation)
+// Banner shown at top of workspace while content generates in the background
 // ---------------------------------------------------------------------------
-const LOADING_MESSAGES = [
-  "Loading your command centre...",
+const GENERATING_MESSAGES = [
   "Building your launch runway...",
   "Creating your 30-day content plan...",
   "Finding your first 10 customers...",
   "Setting up your pricing guide...",
-  "Preparing your AI coach...",
+  "Preparing your weekly plan...",
   "Almost ready...",
 ];
 
-function GeneratingScreen() {
+function GeneratingBanner() {
   const [msgIndex, setMsgIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+      setMsgIndex((prev) => (prev + 1) % GENERATING_MESSAGES.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-6 px-6">
-        <div
-          className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto"
-          style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
-        />
-        <p className="text-text-secondary text-sm font-medium animate-fade-in" key={msgIndex}>
-          {LOADING_MESSAGES[msgIndex]}
-        </p>
-        <p className="text-text-ghost text-xs">
-          This takes 20–30 seconds on your first visit
-        </p>
-      </div>
+    <div
+      className="px-4 py-3 flex items-center justify-center gap-3"
+      style={{ backgroundColor: "var(--brand-color-10)", borderBottom: "1px solid var(--brand-color)" }}
+    >
+      <div
+        className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin flex-shrink-0"
+        style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
+      />
+      <p className="text-sm font-medium" style={{ color: "var(--brand-color)" }} key={msgIndex}>
+        {GENERATING_MESSAGES[msgIndex]}
+      </p>
     </div>
   );
 }
