@@ -1,6 +1,9 @@
 {
   "functions": {
     "app/api/intake/route.ts": {
+      "maxDuration": 15
+    },
+    "app/api/workspace/[token]/route.ts": {
       "maxDuration": 60
     },
     "app/api/ai-coach/route.ts": {

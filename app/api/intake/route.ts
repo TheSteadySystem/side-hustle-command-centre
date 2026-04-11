@@ -148,14 +148,14 @@ function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string, b
 }
 
 // ---------------------------------------------------------------------------
-// Route handler
+// Route handler — creates workspace instantly, NO Claude call here.
+// Claude content is generated lazily when the user opens their workspace.
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
   try {
     console.log("INTAKE: received request");
     const body = await req.json();
 
-    // Tally wraps fields under data.fields
     const fields: TallyField[] =
       body?.data?.fields ?? body?.fields ?? [];
 
@@ -189,46 +189,8 @@ export async function POST(req: NextRequest) {
       ? intake.brand_color
       : getBrandColorFromBusinessType(intake.business_type);
 
-    // 3. Call Claude to generate personalized content
-    console.log("INTAKE: calling Claude API");
-    const claudeResponse = await anthropic.messages.create({
-      model: process.env.INTAKE_MODEL ?? "claude-haiku-4-5-20251001",
-      max_tokens: 4096,
-      messages: [{ role: "user", content: buildPrompt({ ...intake, brand_color }) }],
-    });
-
-    console.log("INTAKE: Claude returned content");
-    const rawText =
-      claudeResponse.content[0].type === "text" ? claudeResponse.content[0].text : "{}";
-
-    let generated: {
-      runway?: { name: string; items: string[] }[];
-      content_prompts?: object[];
-      offer_card?: object;
-      pricing_guide?: object[];
-      startup_costs?: object[];
-    } = {};
-    try {
-      const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      generated = JSON.parse(cleaned);
-    } catch {
-      // Claude returned invalid JSON — continue with empty content rather than failing
-      console.error("Claude JSON parse failed:", rawText.substring(0, 200));
-    }
-
-    const runway_state = {
-      phases:        generated.runway        ?? [],
-      pricing_guide: generated.pricing_guide ?? [],
-      startup_costs: generated.startup_costs ?? [],
-    };
-
-    const content_state = {
-      prompts: generated.content_prompts ?? [],
-    };
-
-    const offer_card = generated.offer_card ?? {};
-
-    // 4. Insert workspace into Supabase (retry with new slug on collision)
+    // 3. Insert workspace into Supabase with empty content (retry on slug collision)
+    // Content will be generated lazily via GET /api/workspace/[token]
     console.log("INTAKE: inserting into Supabase");
     let workspace = null;
     let dbError = null;
@@ -253,9 +215,9 @@ export async function POST(req: NextRequest) {
           startup_budget:       intake.startup_budget,
           brand_color,
           experience_level:     intake.experience_level || null,
-          runway_state,
-          content_state,
-          offer_card,
+          runway_state:         { needs_generation: true },
+          content_state:        { needs_generation: true },
+          offer_card:           {},
           milestones:           ["system_activated"],
           ai_messages_remaining: 50,
         })
@@ -268,7 +230,6 @@ export async function POST(req: NextRequest) {
         break;
       }
 
-      // Slug collision — regenerate and retry
       if (error.code === "23505" && error.message.includes("slug")) {
         console.log(`INTAKE: slug collision on "${finalSlug}", retrying...`);
         finalSlug = generateSlug(intake.business_name || "my-biz");
@@ -280,21 +241,18 @@ export async function POST(req: NextRequest) {
       break;
     }
 
-    console.log("INTAKE: Supabase insert done");
-
     if (dbError || !workspace) {
       console.error("Supabase insert error:", dbError);
       return NextResponse.json({ error: "Failed to create workspace" }, { status: 500 });
     }
+    console.log("INTAKE: workspace created:", finalSlug);
 
-    // 5. Send welcome email via Resend
-    console.log("INTAKE: sending email");
+    // 4. Send welcome email via Resend
     const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.sidehustlecommandcentre.com";
     const workspaceUrl = `${appUrl}/${finalSlug}?t=${access_token}`;
+    const fromEmail    = process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com";
 
-    const fromEmail = process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com";
     console.log("INTAKE: sending email from:", fromEmail, "to:", intake.buyer_email);
-
     const emailResult = await resend.emails.send({
       from:    fromEmail,
       to:      intake.buyer_email,
