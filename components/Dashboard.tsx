@@ -1,7 +1,8 @@
 "use client";
 
-import { Workspace, RunwayPhase, ContentPrompt } from "@/lib/types";
+import { Workspace, RunwayPhase, ContentPrompt, WeeklyPlan } from "@/lib/types";
 import MilestoneBar from "./MilestoneBar";
+import WeeklyPlanner from "./WeeklyPlanner";
 import {
   formatCurrency,
   getRunwayProgress,
@@ -11,7 +12,7 @@ import {
 } from "@/lib/utils";
 import { Rocket, TrendingUp, Target, Flame, ArrowRight } from "lucide-react";
 
-type Tab = "dashboard" | "runway" | "money" | "content" | "offer" | "coach";
+type Tab = "dashboard" | "runway" | "customers" | "money" | "content" | "offer" | "coach";
 
 interface Props {
   workspace: Workspace;
@@ -56,6 +57,7 @@ export default function Dashboard({ workspace, onTabChange }: Props) {
   const daysUntilLaunch = getDaysUntilLaunch(workspace.launch_date);
   const contentStreak = getContentStreak(workspace.content_state ?? {});
   const milestones: string[] = workspace.milestones ?? [];
+  const weeklyPlan = workspace.content_state?.weekly_plan as WeeklyPlan | undefined;
 
   // Top runway task (first incomplete item)
   let topTask: string | null = null;
@@ -170,6 +172,11 @@ export default function Dashboard({ workspace, onTabChange }: Props) {
           />
         </div>
       </div>
+
+      {/* Weekly Planner */}
+      {weeklyPlan && weeklyPlan.blocks?.length > 0 && (
+        <WeeklyPlanner weeklyPlan={weeklyPlan} />
+      )}
 
       {/* AI Coach CTA */}
       <button

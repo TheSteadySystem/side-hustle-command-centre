@@ -58,6 +58,9 @@ body {
 .brand-bg-20 {
   background-color: var(--brand-color-20);
 }
+.brand-text-on-brand {
+  color: var(--brand-text-on-brand);
+}
 
 /* Focus styles */
 *:focus-visible {

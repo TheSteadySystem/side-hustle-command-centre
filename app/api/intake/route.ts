@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { anthropic, AI_COACH_MODEL } from "@/lib/claude";
 import { resend } from "@/lib/resend";
-import { generateSlug, generateToken, getBrandColorFromBusinessType } from "@/lib/utils";
+import { generateSlug, generateToken, resolveColor } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Tally field extractor
@@ -185,9 +185,7 @@ export async function POST(req: NextRequest) {
     // 2. Generate slug, token, brand color
     const slug         = generateSlug(intake.business_name || "my-biz");
     const access_token = generateToken(64);
-    const brand_color  = /^#[0-9A-Fa-f]{6}$/.test(intake.brand_color)
-      ? intake.brand_color
-      : getBrandColorFromBusinessType(intake.business_type);
+    const brand_color  = resolveColor(intake.brand_color, intake.business_type);
 
     // 3. Insert workspace into Supabase with empty content (retry on slug collision)
     // Content will be generated lazily via GET /api/workspace/[token]

@@ -37,19 +37,22 @@ export interface Workspace {
 }
 
 // Stored in runway_state JSONB column
-// Contains both the phase data AND per-item completion state keys (e.g. "0_1": true)
 export interface WorkspaceRunwayState {
+  needs_generation?: boolean;
   phases?: RunwayPhase[];
   pricing_guide?: PricingTier[];
   startup_costs?: StartupCost[];
-  [key: string]: boolean | RunwayPhase[] | PricingTier[] | StartupCost[] | undefined;
+  first_customers?: FirstCustomerStep[];
+  ready_checklist?: ReadyChecklistItem[];
+  [key: string]: boolean | RunwayPhase[] | PricingTier[] | StartupCost[] | FirstCustomerStep[] | ReadyChecklistItem[] | undefined;
 }
 
 // Stored in content_state JSONB column
-// Contains both the prompts array AND per-day completion keys (e.g. "1": true)
 export interface WorkspaceContentState {
+  needs_generation?: boolean;
   prompts?: ContentPrompt[];
-  [key: string]: boolean | ContentPrompt[] | undefined;
+  weekly_plan?: WeeklyPlan;
+  [key: string]: boolean | ContentPrompt[] | WeeklyPlan | undefined;
 }
 
 export interface RunwayPhase {
@@ -78,14 +81,6 @@ export interface AIMessage {
   timestamp: string;
 }
 
-export interface GeneratedContent {
-  runway: RunwayPhase[];
-  content_prompts: ContentPrompt[];
-  offer_card: OfferCard;
-  pricing_guide: PricingTier[];
-  startup_costs: StartupCost[];
-}
-
 export interface ContentPrompt {
   day: number;
   prompt: string;
@@ -102,4 +97,31 @@ export interface PricingTier {
 export interface StartupCost {
   name: string;
   amount: number;
+}
+
+// Feature 2: First 10 Customers
+export interface FirstCustomerStep {
+  step: number;
+  action: string;
+  detail: string;
+  platform: string;
+}
+
+// Feature 3: Weekly Time Planner
+export interface TimeBlock {
+  day: string;
+  task: string;
+  minutes: number;
+  category: "build" | "content" | "outreach" | "admin";
+}
+
+export interface WeeklyPlan {
+  suggested_hours: number;
+  blocks: TimeBlock[];
+}
+
+// Feature 4: Ready to Sell Checklist
+export interface ReadyChecklistItem {
+  item: string;
+  category: "product" | "brand" | "sales" | "legal";
 }

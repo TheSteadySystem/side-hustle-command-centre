@@ -3,7 +3,9 @@ import { supabase } from "@/lib/supabase";
 import { anthropic } from "@/lib/claude";
 
 // ---------------------------------------------------------------------------
-// Claude prompt for lazy content generation (same as was in intake)
+// Claude prompt for lazy content generation
+// Generates 8 items: runway, content, offer card, pricing, costs,
+// first customers, weekly plan, ready checklist
 // ---------------------------------------------------------------------------
 function buildPrompt(w: Record<string, unknown>): string {
   return `You are generating personalized business launch content. Output ONLY valid JSON — no markdown, no preamble, no explanation.
@@ -42,7 +44,34 @@ Generate a JSON object with these exact keys:
 5. "startup_costs" — array of 5-7 objects:
    Each: { "name": string, "amount": number }
    Categories must be specific to this business type.
-   Amounts should sum to approximately $${w.startup_budget ?? 500}.`;
+   Amounts should sum to approximately $${w.startup_budget ?? 500}.
+
+6. "first_customers" — array of exactly 10 objects:
+   Each: { "step": number, "action": string, "detail": string, "platform": string }
+   These must be SPECIFIC, actionable steps to get the first 10 paying customers.
+   Steps should be ordered from easiest/fastest to more advanced.
+   Reference the specific platforms they selected, their target audience, and their business type.
+   Examples of good actions: "Post in 3 Facebook groups where ${w.target_audience} hangs out", "DM 5 people who commented on similar ${w.business_type} posts on Instagram", "Offer a founding customer discount to your existing network"
+   Do NOT include generic advice like "build a website" or "create social media accounts" — those are in the runway.
+   Focus on outreach, conversations, and closing the first sale.
+
+7. "weekly_plan" — object:
+   { "suggested_hours": number, "blocks": [ { "day": string, "task": string, "minutes": number, "category": "build"|"content"|"outreach"|"admin" } ] }
+   Based on their experience level, suggest a realistic weekly hour commitment:
+   - "Total beginner": 5 hours/week
+   - "Some experience": 7 hours/week
+   - "Been doing this a while": 10 hours/week
+   Create 5-7 time blocks spread across the week (not all on one day).
+   Tasks should be specific to their business and current runway phase.
+   Categories help them understand what type of work each block is.
+
+8. "ready_checklist" — array of exactly 6-8 objects:
+   Each: { "item": string, "category": "product"|"brand"|"sales"|"legal" }
+   These are the minimum requirements to start taking money.
+   Must be specific to their business type and platforms.
+   Examples for a handmade business on Etsy: "Listed at least 5 products with photos and descriptions", "Set up Etsy payment processing", "Created a shop banner and profile"
+   Examples for a service business on Instagram: "Published your offer with clear pricing", "Created a booking/inquiry link", "Posted 3 pieces of content showing your work"
+   Do NOT include aspirational items like "build email list" — focus on the minimum viable sales setup.`;
 }
 
 export const maxDuration = 60;
@@ -74,13 +103,13 @@ export async function GET(
     .eq("id", workspace.id);
 
   // Lazy content generation: if workspace was created without Claude content,
-  // generate it now on first load. The user sees a loading screen while this runs.
+  // generate it now on first load.
   if (workspace.runway_state?.needs_generation) {
     console.log("GENERATE: generating content for", workspace.slug);
     try {
       const claudeResponse = await anthropic.messages.create({
-        model: process.env.INTAKE_MODEL ?? "claude-haiku-4-5-20251001",
-        max_tokens: 4096,
+        model: process.env.INTAKE_MODEL ?? "claude-sonnet-4-6",
+        max_tokens: 6000,
         messages: [{ role: "user", content: buildPrompt(workspace) }],
       });
 
@@ -93,23 +122,29 @@ export async function GET(
         offer_card?: object;
         pricing_guide?: object[];
         startup_costs?: object[];
+        first_customers?: { step: number; action: string; detail: string; platform: string }[];
+        weekly_plan?: { suggested_hours: number; blocks: object[] };
+        ready_checklist?: { item: string; category: string }[];
       } = {};
 
       try {
         const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
         generated = JSON.parse(cleaned);
       } catch {
-        console.error("GENERATE: Claude JSON parse failed:", rawText.substring(0, 200));
+        console.error("GENERATE: Claude JSON parse failed:", rawText.substring(0, 300));
       }
 
       const runway_state = {
-        phases:        generated.runway        ?? [],
-        pricing_guide: generated.pricing_guide ?? [],
-        startup_costs: generated.startup_costs ?? [],
+        phases:          generated.runway          ?? [],
+        pricing_guide:   generated.pricing_guide   ?? [],
+        startup_costs:   generated.startup_costs   ?? [],
+        first_customers: generated.first_customers ?? [],
+        ready_checklist: generated.ready_checklist ?? [],
       };
 
       const content_state = {
-        prompts: generated.content_prompts ?? [],
+        prompts:     generated.content_prompts ?? [],
+        weekly_plan: generated.weekly_plan     ?? null,
       };
 
       const offer_card = generated.offer_card ?? workspace.offer_card ?? {};
@@ -121,13 +156,11 @@ export async function GET(
 
       console.log("GENERATE: content saved for", workspace.slug);
 
-      // Return the updated workspace
       workspace.runway_state = runway_state;
       workspace.content_state = content_state;
       workspace.offer_card = offer_card;
     } catch (err) {
       console.error("GENERATE: error generating content:", err);
-      // Return workspace anyway — they'll see empty states with "generating..." messages
     }
   }
 

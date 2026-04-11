@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Workspace, OfferCard, PricingTier } from "@/lib/types";
+import { Workspace, OfferCard, PricingTier, ReadyChecklistItem } from "@/lib/types";
 import { Share2, Copy, Check } from "lucide-react";
 
 interface Props {
@@ -13,6 +13,8 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
   const existing = workspace.offer_card ?? {};
   const pricingGuide: PricingTier[] =
     (workspace.runway_state?.pricing_guide as PricingTier[]) ?? [];
+  const readyChecklist: ReadyChecklistItem[] =
+    (workspace.runway_state?.ready_checklist as ReadyChecklistItem[]) ?? [];
   const brandColor = workspace.brand_color ?? "#B8860B";
 
   const [card, setCard] = useState<OfferCard>({
@@ -229,6 +231,117 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Ready to Sell Checklist */}
+      {readyChecklist.length > 0 && (
+        <ReadyToSell
+          items={readyChecklist}
+          state={workspace.runway_state ?? {}}
+          updateWorkspace={updateWorkspace}
+          milestones={workspace.milestones ?? []}
+        />
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Ready to Sell sub-component
+// ---------------------------------------------------------------------------
+const CATEGORY_BADGE: Record<string, { color: string; label: string }> = {
+  product: { color: "#3B82F6", label: "Product" },
+  brand: { color: "#A855F7", label: "Brand" },
+  sales: { color: "#10B981", label: "Sales" },
+  legal: { color: "#6B7280", label: "Legal" },
+};
+
+function ReadyToSell({
+  items,
+  state,
+  updateWorkspace,
+  milestones,
+}: {
+  items: ReadyChecklistItem[];
+  state: Record<string, unknown>;
+  updateWorkspace: (field: string, value: unknown) => Promise<void>;
+  milestones: string[];
+}) {
+  const doneCount = items.filter((_, i) => !!state[`rc_${i}`]).length;
+
+  const toggle = async (index: number) => {
+    const key = `rc_${index}`;
+    const newState = { ...state, [key]: !state[key] };
+    await updateWorkspace("runway_state", newState);
+
+    const newDone = items.filter((_, i) => !!newState[`rc_${i}`]).length;
+    if (newDone === items.length && items.length > 0 && !milestones.includes("ready_to_sell")) {
+      const newMilestones = [...milestones, "ready_to_sell"];
+      await updateWorkspace("milestones", newMilestones);
+    }
+  };
+
+  return (
+    <div
+      className="rounded-xl p-5 space-y-4"
+      style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+    >
+      <div className="flex items-center justify-between">
+        <p className="text-text-muted text-xs uppercase tracking-widest">
+          Ready to Sell?
+        </p>
+        <span className="text-xs font-medium" style={{ color: "var(--brand-color)" }}>
+          {doneCount}/{items.length}
+        </span>
+      </div>
+      <p className="text-text-subtle text-xs">
+        Complete these to start taking money
+      </p>
+
+      <div className="space-y-2">
+        {items.map((item, i) => {
+          const isDone = !!state[`rc_${i}`];
+          const badge = CATEGORY_BADGE[item.category] ?? CATEGORY_BADGE.product;
+
+          return (
+            <button
+              key={i}
+              onClick={() => toggle(i)}
+              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-bg-cardHover transition-colors text-left"
+            >
+              <div
+                className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all"
+                style={{
+                  backgroundColor: isDone ? "var(--brand-color)" : "transparent",
+                  borderColor: isDone ? "var(--brand-color)" : "#2A2825",
+                }}
+              >
+                {isDone && <Check size={11} style={{ color: "var(--brand-text-on-brand)" }} />}
+              </div>
+              <span
+                className="text-sm flex-1"
+                style={{
+                  color: isDone ? "#4A4540" : "#D4CFC6",
+                  textDecoration: isDone ? "line-through" : "none",
+                }}
+              >
+                {item.item}
+              </span>
+              <span
+                className="text-xs px-1.5 py-0.5 rounded flex-shrink-0"
+                style={{ backgroundColor: `${badge.color}20`, color: badge.color }}
+              >
+                {badge.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {doneCount === items.length && items.length > 0 && (
+        <p className="text-center text-sm font-medium" style={{ color: "var(--brand-color)" }}>
+          You&apos;re ready — go get your first customer!
+        </p>
       )}
     </div>
   );

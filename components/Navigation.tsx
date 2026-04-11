@@ -1,12 +1,13 @@
 "use client";
 
-import { LayoutDashboard, CheckSquare, DollarSign, Calendar, Zap, MessageCircle } from "lucide-react";
+import { LayoutDashboard, CheckSquare, DollarSign, Calendar, Zap, MessageCircle, Users } from "lucide-react";
 
-type Tab = "dashboard" | "runway" | "money" | "content" | "offer" | "coach";
+type Tab = "dashboard" | "runway" | "customers" | "money" | "content" | "offer" | "coach";
 
 const TABS: { id: Tab; label: string; icon: React.ElementType; shortLabel: string }[] = [
   { id: "dashboard", label: "Dashboard", shortLabel: "Home", icon: LayoutDashboard },
   { id: "runway", label: "Launch Runway", shortLabel: "Runway", icon: CheckSquare },
+  { id: "customers", label: "First Customers", shortLabel: "Customers", icon: Users },
   { id: "money", label: "Money", shortLabel: "Money", icon: DollarSign },
   { id: "content", label: "Content Engine", shortLabel: "Content", icon: Calendar },
   { id: "offer", label: "Offer Builder", shortLabel: "Offer", icon: Zap },

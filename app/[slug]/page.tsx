@@ -12,10 +12,12 @@ import MoneyTracker from "@/components/MoneyTracker";
 import ContentEngine from "@/components/ContentEngine";
 import OfferBuilder from "@/components/OfferBuilder";
 import AICoach from "@/components/AICoach";
+import FirstCustomers from "@/components/FirstCustomers";
 
 type Tab =
   | "dashboard"
   | "runway"
+  | "customers"
   | "money"
   | "content"
   | "offer"
@@ -60,6 +62,12 @@ export default function WorkspacePage({
       document.documentElement.style.setProperty(
         "--brand-color-20",
         `rgba(${r}, ${g}, ${b}, 0.2)`
+      );
+      // Determine contrast text for brand-colored backgrounds
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      document.documentElement.style.setProperty(
+        "--brand-text-on-brand",
+        luminance > 0.5 ? "#0C0B0A" : "#F5F0E8"
       );
     } catch {
       setError("We couldn't find your workspace. Please check your link.");
@@ -120,17 +128,7 @@ export default function WorkspacePage({
   );
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div
-            className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto brand-border"
-            style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
-          />
-          <p className="text-text-muted text-sm">Loading your command centre...</p>
-        </div>
-      </div>
-    );
+    return <GeneratingScreen />;
   }
 
   if (error || !workspace) {
@@ -183,6 +181,12 @@ export default function WorkspacePage({
               updateWorkspace={updateWorkspace}
             />
           )}
+          {activeTab === "customers" && (
+            <FirstCustomers
+              workspace={workspace}
+              updateWorkspace={updateWorkspace}
+            />
+          )}
           {activeTab === "money" && (
             <MoneyTracker
               workspace={workspace}
@@ -215,5 +219,46 @@ export default function WorkspacePage({
         />
       )}
     </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Animated loading screen with progress messages (shown during first-visit generation)
+// ---------------------------------------------------------------------------
+const LOADING_MESSAGES = [
+  "Loading your command centre...",
+  "Building your launch runway...",
+  "Creating your 30-day content plan...",
+  "Finding your first 10 customers...",
+  "Setting up your pricing guide...",
+  "Preparing your AI coach...",
+  "Almost ready...",
+];
+
+function GeneratingScreen() {
+  const [msgIndex, setMsgIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-6 px-6">
+        <div
+          className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto"
+          style={{ borderColor: "var(--brand-color)", borderTopColor: "transparent" }}
+        />
+        <p className="text-text-secondary text-sm font-medium animate-fade-in" key={msgIndex}>
+          {LOADING_MESSAGES[msgIndex]}
+        </p>
+        <p className="text-text-ghost text-xs">
+          This takes 20–30 seconds on your first visit
+        </p>
+      </div>
+    </div>
   );
 }

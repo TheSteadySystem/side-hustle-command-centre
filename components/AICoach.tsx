@@ -10,11 +10,37 @@ interface Props {
   onOpenMessagePack: () => void;
 }
 
-const SUGGESTED_PROMPTS = [
-  "What should I focus on this week?",
-  "How do I price my products?",
-  "Write me an Instagram caption for my launch",
-  "What's my next most important task?",
+const COACH_MODES = [
+  {
+    label: "I\u2019m stuck",
+    prompt: "I\u2019m feeling stuck and don\u2019t know what to do next with my business. Based on where I am, what\u2019s the ONE most important thing I should focus on right now?",
+    icon: "\uD83D\uDCA1",
+  },
+  {
+    label: "Review my idea",
+    prompt: "Can you honestly review my business idea? Tell me what\u2019s strong, what\u2019s risky, and what I should consider changing before I invest more time.",
+    icon: "\uD83D\uDD0D",
+  },
+  {
+    label: "What should I do this week?",
+    prompt: "Based on where I am in my launch runway, give me a specific 3-task plan for this week that moves the needle the most.",
+    icon: "\uD83D\uDDD3\uFE0F",
+  },
+  {
+    label: "Help me get customers",
+    prompt: "I need to find my first paying customers. Give me 3 specific things I can do THIS WEEK on my platforms to start getting sales.",
+    icon: "\uD83D\uDC65",
+  },
+  {
+    label: "Am I ready to launch?",
+    prompt: "Look at my business setup \u2014 my offer, my pricing, my content. Am I ready to start selling? Be direct \u2014 \u201Cyes, go\u201D or \u201Cnot yet, here\u2019s what\u2019s missing.\u201D",
+    icon: "\uD83D\uDE80",
+  },
+  {
+    label: "Boost my confidence",
+    prompt: "I\u2019m doubting myself and wondering if this business idea is worth pursuing. Help me see it objectively and give me real encouragement based on what I\u2019ve built so far.",
+    icon: "\u26A1",
+  },
 ];
 
 export default function AICoach({
@@ -63,7 +89,6 @@ export default function AICoach({
         } else {
           setError(data.error ?? "Something went wrong. Try again.");
         }
-        // Remove optimistic user message on error
         setMessages((prev) => prev.filter((m) => m !== userMsg));
         return;
       }
@@ -108,23 +133,22 @@ export default function AICoach({
         </button>
       </div>
 
-      {/* Suggested prompts — only when no conversation */}
+      {/* Coach modes — 2-column grid, only when no conversation */}
       {messages.length === 0 && (
         <div className="pb-4">
-          <p className="text-text-subtle text-xs mb-2">Try asking:</p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTED_PROMPTS.map((p) => (
+          <p className="text-text-subtle text-xs mb-3">What do you need help with?</p>
+          <div className="grid grid-cols-2 gap-2">
+            {COACH_MODES.map((mode) => (
               <button
-                key={p}
-                onClick={() => sendMessage(p)}
-                className="text-xs px-3 py-2 rounded-lg transition-colors hover:opacity-90"
-                style={{
-                  backgroundColor: "var(--brand-color-10)",
-                  color: "var(--brand-color)",
-                  border: "1px solid var(--brand-color)",
-                }}
+                key={mode.label}
+                onClick={() => sendMessage(mode.prompt)}
+                className="flex items-center gap-2.5 p-3 rounded-xl text-left transition-colors hover:bg-bg-cardHover"
+                style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
               >
-                {p}
+                <span className="text-lg flex-shrink-0">{mode.icon}</span>
+                <span className="text-text-secondary text-xs font-medium leading-snug">
+                  {mode.label}
+                </span>
               </button>
             ))}
           </div>
@@ -164,7 +188,7 @@ export default function AICoach({
                 msg.role === "user"
                   ? {
                       backgroundColor: "var(--brand-color)",
-                      color: "#0C0B0A",
+                      color: "var(--brand-text-on-brand)",
                       borderBottomRightRadius: "4px",
                     }
                   : {
@@ -232,7 +256,7 @@ export default function AICoach({
         <button
           onClick={onOpenMessagePack}
           className="w-full py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
-          style={{ backgroundColor: "var(--brand-color)", color: "#0C0B0A" }}
+          style={{ backgroundColor: "var(--brand-color)", color: "var(--brand-text-on-brand)" }}
         >
           Get 50 more messages — $5
         </button>
@@ -259,7 +283,7 @@ export default function AICoach({
             className="px-4 py-3 rounded-xl disabled:opacity-40 transition-opacity"
             style={{ backgroundColor: "var(--brand-color)" }}
           >
-            <Send size={16} color="#0C0B0A" />
+            <Send size={16} style={{ color: "var(--brand-text-on-brand)" }} />
           </button>
         </form>
       )}

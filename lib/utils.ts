@@ -25,6 +25,35 @@ export function generateReferralCode(): string {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
+// ---------------------------------------------------------------------------
+// Brand color resolution: handles hex, color names, and fuzzy descriptions
+// ---------------------------------------------------------------------------
+const COLOR_NAME_MAP: Record<string, string> = {
+  "red": "#DC2626", "pink": "#EC4899", "rose": "#F43F5E",
+  "orange": "#EA580C", "yellow": "#EAB308", "gold": "#B8860B",
+  "green": "#16A34A", "teal": "#0D9488", "cyan": "#06B6D4",
+  "blue": "#2563EB", "indigo": "#4F46E5", "purple": "#9333EA",
+  "violet": "#7C3AED", "lavender": "#A78BFA", "coral": "#F97316",
+  "salmon": "#FB923C", "mint": "#34D399", "sage": "#688E6B",
+  "navy": "#1E3A5F", "burgundy": "#7F1D1D", "maroon": "#7F1D1D",
+  "black": "#1A1A1A", "white": "#F5F5F5", "grey": "#6B7280",
+  "gray": "#6B7280", "brown": "#92400E", "beige": "#D4A574",
+  "cream": "#FFFDD0", "turquoise": "#06B6D4", "magenta": "#D946EF",
+  "lime": "#84CC16", "olive": "#6B8E23", "forest green": "#166534",
+  "sky blue": "#38BDF8", "baby blue": "#93C5FD", "hot pink": "#EC4899",
+  "green blue": "#0D9488", "blue green": "#0D9488",
+};
+
+export function resolveColor(raw: string, businessType: string): string {
+  if (/^#[0-9A-Fa-f]{6}$/.test(raw)) return raw;
+  const normalized = raw.toLowerCase().trim();
+  if (COLOR_NAME_MAP[normalized]) return COLOR_NAME_MAP[normalized];
+  for (const [name, hex] of Object.entries(COLOR_NAME_MAP)) {
+    if (normalized.includes(name)) return hex;
+  }
+  return getBrandColorFromBusinessType(businessType);
+}
+
 export function getBrandColorFromBusinessType(type: string): string {
   const colorMap: Record<string, string> = {
     "Handmade Products": "#B8860B",
