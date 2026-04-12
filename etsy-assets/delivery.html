@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Side Hustle Command Centre — Your Access Instructions</title>
+<style>
+  @page {
+    size: letter;
+    margin: 0.6in 0.75in;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: #1A1918;
+    line-height: 1.6;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    border-bottom: 2px solid #B8860B;
+    padding-bottom: 14pt;
+    margin-bottom: 24pt;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .dot {
+    width: 8pt;
+    height: 8pt;
+    background: #B8860B;
+    border-radius: 50%;
+  }
+  .brand-name {
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: -0.2pt;
+  }
+  h1 {
+    font-size: 28pt;
+    line-height: 1.1;
+    margin: 8pt 0 4pt 0;
+    font-weight: 700;
+    color: #0C0B0A;
+  }
+  .tagline {
+    font-size: 12pt;
+    color: #6B6560;
+    margin: 0;
+  }
+  .big-cta {
+    background: #FAF7F1;
+    border: 2px solid #B8860B;
+    border-radius: 12pt;
+    padding: 18pt 22pt;
+    margin: 20pt 0 24pt 0;
+  }
+  .cta-label {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5pt;
+    color: #B8860B;
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+  .cta-headline {
+    font-size: 16pt;
+    font-weight: 700;
+    margin: 0 0 14pt 0;
+    color: #0C0B0A;
+  }
+  .code-box {
+    background: #0C0B0A;
+    color: #F5F0E8;
+    padding: 14pt 18pt;
+    border-radius: 8pt;
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 15pt;
+    font-weight: 700;
+    letter-spacing: 2pt;
+    text-align: center;
+    margin: 10pt 0;
+  }
+  .url {
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 10pt;
+    color: #0C0B0A;
+    word-break: break-all;
+    background: #FFFFFF;
+    padding: 10pt 14pt;
+    border-radius: 6pt;
+    border: 1px solid #E8E4DD;
+    margin: 6pt 0;
+  }
+  h2 {
+    font-size: 14pt;
+    margin: 24pt 0 10pt 0;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid #E8E4DD;
+    color: #0C0B0A;
+  }
+  ol, ul {
+    padding-left: 20pt;
+    margin: 8pt 0;
+  }
+  li {
+    margin-bottom: 6pt;
+  }
+  .step {
+    display: flex;
+    gap: 12pt;
+    align-items: flex-start;
+    margin-bottom: 14pt;
+  }
+  .step-num {
+    flex: 0 0 24pt;
+    height: 24pt;
+    background: #B8860B;
+    color: #0C0B0A;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 12pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1pt;
+  }
+  .step-body {
+    flex: 1;
+  }
+  .step-title {
+    font-weight: 700;
+    margin: 0 0 3pt 0;
+    color: #0C0B0A;
+  }
+  .step-desc {
+    margin: 0;
+    color: #4A4540;
+    font-size: 10.5pt;
+  }
+  .callout {
+    background: #FFF8EA;
+    border-left: 3px solid #B8860B;
+    padding: 12pt 16pt;
+    border-radius: 4pt;
+    margin: 14pt 0;
+    font-size: 10pt;
+  }
+  .callout strong {
+    color: #7A5A00;
+  }
+  .whats-inside {
+    background: #FAF7F1;
+    border-radius: 10pt;
+    padding: 16pt 20pt;
+    margin: 16pt 0;
+  }
+  .whats-inside ul {
+    margin: 0;
+    padding-left: 18pt;
+    list-style: none;
+  }
+  .whats-inside li {
+    position: relative;
+    padding-left: 4pt;
+    margin-bottom: 7pt;
+    font-size: 10.5pt;
+  }
+  .whats-inside li:before {
+    content: "✓";
+    color: #B8860B;
+    font-weight: 700;
+    position: absolute;
+    left: -16pt;
+  }
+  .footer {
+    margin-top: 30pt;
+    padding-top: 14pt;
+    border-top: 1px solid #E8E4DD;
+    font-size: 9pt;
+    color: #6B6560;
+    text-align: center;
+  }
+  .footer a {
+    color: #B8860B;
+    text-decoration: none;
+  }
+  strong {
+    color: #0C0B0A;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="dot"></div>
+    <div class="brand-name">Side Hustle Command Centre</div>
+  </div>
+  <h1>Thanks for your order!</h1>
+  <p class="tagline">Your personalized business launch system is three clicks away.</p>
+</div>
+
+<div class="big-cta">
+  <p class="cta-label">Your Access Link</p>
+  <p class="cta-headline">Go here to claim your command centre</p>
+  <div class="url">https://www.sidehustlecommandcentre.com</div>
+  <p class="cta-label" style="margin-top:18pt;">Your Promo Code</p>
+  <div class="code-box">ETSY</div>
+  <p style="margin:6pt 0 0 0; font-size:9.5pt; color:#6B6560;">
+    Enter this at Stripe checkout — it waives the normal $275 price since you already paid on Etsy.
+  </p>
+</div>
+
+<h2>Setup — 5 minutes from start to finish</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <p class="step-title">Visit sidehustlecommandcentre.com</p>
+    <p class="step-desc">Click the "Build My Command Centre" button on the homepage.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <p class="step-title">Enter promo code ETSY at Stripe checkout</p>
+    <p class="step-desc">Look for the "Add promotion code" link on the checkout page. Enter <strong>ETSY</strong>. Your total will drop to $0.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <p class="step-title">Answer 13 quick questions about your business</p>
+    <p class="step-desc">Business name, what you sell, your audience, your goals, your timeline. Takes about 3 minutes.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <p class="step-title">Check your inbox for your private link</p>
+    <p class="step-desc">Your personalized command centre is emailed within seconds. The email comes from <strong>hello@thesteadysystem.com</strong> — if you don't see it in your Primary inbox, check Promotions and drag it to Primary.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <p class="step-title">Click your private link and tap "Generate My Runway"</p>
+    <p class="step-desc">Your AI coach builds your personalized plan in about 30 seconds. Bookmark the link — it's your new business HQ.</p>
+  </div>
+</div>
+
+<h2>What's inside your command centre</h2>
+
+<div class="whats-inside">
+  <ul>
+    <li><strong>Personalized Launch Runway</strong> — 4-phase checklist specific to your business type and experience</li>
+    <li><strong>30-Day Content Calendar</strong> — daily prompts for your specific platforms and audience</li>
+    <li><strong>AI Business Coach</strong> — 50 messages with a coach that already knows your business context</li>
+    <li><strong>First 10 Customers Plan</strong> — specific outreach steps with exact message templates</li>
+    <li><strong>Offer Builder + 3-Tier Pricing Guide</strong> — realistic pricing for your business category</li>
+    <li><strong>Money Tracker</strong> — revenue, expenses, startup cost breakdown</li>
+    <li><strong>CEO Dashboard</strong> — everything at a glance</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <strong>Important:</strong> Stripe will ask for a card at checkout even though your total is $0. This is standard — they authorize but don't charge. Your card is never billed.
+</div>
+
+<h2>Need help?</h2>
+
+<p>Reply to your welcome email or write to <strong>hello@thesteadysystem.com</strong> — that's my direct inbox. I answer within a few hours (usually much sooner).</p>
+
+<p>Your command centre lives at a private link that's yours forever. No subscription, no expiration, no logins to manage. If you ever need more AI coach messages, they're optional $5 top-ups for 50 more.</p>
+
+<div class="footer">
+  Side Hustle Command Centre is built by Carley Bowyer at The Steady System.<br>
+  <a href="https://www.sidehustlecommandcentre.com">sidehustlecommandcentre.com</a>
+  &nbsp;·&nbsp;
+  <a href="mailto:hello@thesteadysystem.com">hello@thesteadysystem.com</a>
+</div>
+
+</body>
+</html>
