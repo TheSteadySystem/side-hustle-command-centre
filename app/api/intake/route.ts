@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { anthropic, AI_COACH_MODEL } from "@/lib/claude";
 import { resend } from "@/lib/resend";
+import { stripe } from "@/lib/stripe";
 import { generateSlug, generateToken, resolveColor } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -161,6 +162,48 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No fields received" }, { status: 400 });
     }
 
+    // 0. Verify Stripe payment — session_id comes from the hidden field
+    // set by the thank-you page when embedding the Tally form.
+    const sessionId = extract(fields, "session_id");
+    if (!sessionId) {
+      console.error("INTAKE: missing session_id — rejecting");
+      return NextResponse.json(
+        { error: "Payment not verified — session_id missing" },
+        { status: 402 }
+      );
+    }
+
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (session.payment_status !== "paid") {
+        console.error("INTAKE: stripe session not paid:", session.payment_status);
+        return NextResponse.json(
+          { error: "Payment not completed" },
+          { status: 402 }
+        );
+      }
+      console.log("INTAKE: stripe session verified paid:", sessionId);
+    } catch (err) {
+      console.error("INTAKE: stripe verification failed:", err);
+      return NextResponse.json(
+        { error: "Payment verification failed" },
+        { status: 402 }
+      );
+    }
+
+    // Idempotency: bail if a workspace already exists for this session_id.
+    // This prevents double-submits from creating duplicate workspaces.
+    const { data: existing } = await supabase
+      .from("workspaces")
+      .select("slug, access_token")
+      .eq("stripe_session_id", sessionId)
+      .maybeSingle();
+
+    if (existing) {
+      console.log("INTAKE: workspace already exists for session_id:", sessionId);
+      return NextResponse.json({ success: true, slug: existing.slug, duplicate: true });
+    }
+
     // 1. Extract all 13 intake fields
     const intake = {
       buyer_name:           extract(fields, "first name", "your name"),
@@ -214,6 +257,7 @@ export async function POST(req: NextRequest) {
           offer_card:           {},
           milestones:           ["system_activated"],
           ai_messages_remaining: 50,
+          stripe_session_id:    sessionId,
         })
         .select("id")
         .single();

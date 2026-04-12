@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { CheckCircle, ArrowRight, Zap, BarChart2, Calendar, MessageCircle, Layout, Star } from "lucide-react";
+import { CheckCircle, Zap, BarChart2, Calendar, MessageCircle, Layout, Star } from "lucide-react";
+import BuyButton from "@/components/BuyButton";
 
 export const metadata: Metadata = {
   title: "Side Hustle Command Centre — Your AI-Powered Business Launch System",
@@ -68,8 +69,6 @@ const WHATS_DIFFERENT = [
 ];
 
 export default function LandingPage() {
-  const purchaseUrl = "https://tally.so/r/rjd0lv";
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0C0B0A", color: "#F5F0E8" }}>
       {/* Nav */}
@@ -81,13 +80,13 @@ export default function LandingPage() {
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#B8860B" }} />
           <span className="font-semibold text-sm tracking-tight">Side Hustle Command Centre</span>
         </div>
-        <a
-          href={purchaseUrl}
+        <BuyButton
+          showArrow={false}
           className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-90"
           style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
         >
-          Get Access — $297
-        </a>
+          Get Access — $275
+        </BuyButton>
       </nav>
 
       {/* Hero */}
@@ -115,16 +114,14 @@ export default function LandingPage() {
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href={purchaseUrl}
+          <BuyButton
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
           >
             Build My Command Centre
-            <ArrowRight size={18} />
-          </a>
+          </BuyButton>
           <p style={{ color: "#6B6560" }} className="text-sm">
-            $297 one-time · No subscription · Private link delivered by email
+            $275 one-time · No subscription · Private link delivered by email
           </p>
         </div>
       </section>
@@ -277,7 +274,7 @@ export default function LandingPage() {
               <Star size={28} style={{ color: "#B8860B" }} />
             </div>
             <p className="text-5xl font-bold mb-1" style={{ color: "#F5F0E8" }}>
-              $297
+              $275
             </p>
             <p className="text-sm mb-6" style={{ color: "#6B6560" }}>
               One-time payment
@@ -304,13 +301,13 @@ export default function LandingPage() {
                 </li>
               ))}
             </ul>
-            <a
-              href={purchaseUrl}
+            <BuyButton
+              showArrow={false}
               className="block w-full py-4 rounded-xl font-bold text-base transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
             >
               Build My Command Centre →
-            </a>
+            </BuyButton>
           </div>
         </div>
       </section>
@@ -330,7 +327,7 @@ export default function LandingPage() {
             },
             {
               q: "Is this a monthly subscription?",
-              a: "No. $297 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
+              a: "No. $275 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
             },
             {
               q: "What kind of businesses is this for?",
@@ -376,14 +373,12 @@ export default function LandingPage() {
             Not another PDF. Not another course. A working command centre that
             knows your business and grows with you.
           </p>
-          <a
-            href={purchaseUrl}
+          <BuyButton
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
           >
-            Build My Command Centre — $297
-            <ArrowRight size={18} />
-          </a>
+            Build My Command Centre — $275
+          </BuyButton>
           <p className="text-xs" style={{ color: "#4A4540" }}>
             Delivered by email · Private link · Works on any device
           </p>
