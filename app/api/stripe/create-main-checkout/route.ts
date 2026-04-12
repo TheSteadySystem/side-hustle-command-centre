@@ -30,6 +30,7 @@ export async function POST() {
     ],
     // Capture email on Stripe so we can pre-fill the intake form
     billing_address_collection: "auto",
+    allow_promotion_codes: true,
     metadata: {
       purchase_type: "main",
     },
