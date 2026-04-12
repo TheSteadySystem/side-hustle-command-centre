@@ -5,7 +5,12 @@
       "Bash(npx create-next-app@14 . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --yes --name \"shcc\")",
       "Read(//private/tmp/**)",
       "Bash(npx create-next-app@14 shcc --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --yes)",
-      "Bash(open -a TextEdit \"/Users/momma/Desktop/Side Hustle Command Centre/.env.local\")"
+      "Bash(open -a TextEdit \"/Users/momma/Desktop/Side Hustle Command Centre/.env.local\")",
+      "Bash(npm run:*)",
+      "Bash(node generate.js)",
+      "Bash(brew install:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(find \"/Users/momma/Desktop/Side Hustle Command Centre/.git\" -name \"*.lock\" -exec rm -f {} \\\\;)"
     ]
   }
 }
