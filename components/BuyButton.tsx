@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, CSSProperties } from "react";
+import { CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 
 interface Props {
@@ -10,45 +10,29 @@ interface Props {
   showArrow?: boolean;
 }
 
+// Primary buy button — routes the buyer to the Gumroad product page.
+// Gumroad handles payment, sends a Ping webhook to /api/gumroad/webhook,
+// and our webhook emails the buyer a magic link to /thank-you where they
+// fill the intake form and their workspace is built.
+const GUMROAD_URL =
+  process.env.NEXT_PUBLIC_GUMROAD_URL ??
+  "https://steadysoul7.gumroad.com/l/gyzjep";
+
 export default function BuyButton({
   className = "",
   style,
   children,
   showArrow = true,
 }: Props) {
-  const [loading, setLoading] = useState(false);
-
-  const handleClick = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const res = await fetch("/api/stripe/create-main-checkout", {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(
-          "Sorry, we couldn't start checkout. Please try again or email hello@thesteadysystem.com."
-        );
-        setLoading(false);
-      }
-    } catch {
-      alert("Network error. Please check your connection and try again.");
-      setLoading(false);
-    }
-  };
-
   return (
-    <button
-      onClick={handleClick}
-      disabled={loading}
+    <a
+      href={GUMROAD_URL}
       className={className}
-      style={{ cursor: loading ? "wait" : "pointer", ...style }}
+      style={style}
+      rel="noopener"
     >
-      {loading ? "Loading…" : children}
-      {showArrow && !loading && <ArrowRight size={18} />}
-    </button>
+      {children}
+      {showArrow && <ArrowRight size={18} />}
+    </a>
   );
 }

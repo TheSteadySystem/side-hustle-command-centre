@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Side Hustle Command Centre — Your Next Step</title>
+<style>
+  @page {
+    size: letter;
+    margin: 0.6in 0.75in;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: #1A1918;
+    line-height: 1.65;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    border-bottom: 2px solid #B8860B;
+    padding-bottom: 14pt;
+    margin-bottom: 24pt;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .dot {
+    width: 8pt;
+    height: 8pt;
+    background: #B8860B;
+    border-radius: 50%;
+  }
+  .brand-name {
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: -0.2pt;
+  }
+  h1 {
+    font-size: 28pt;
+    line-height: 1.15;
+    margin: 10pt 0 4pt 0;
+    font-weight: 700;
+    color: #0C0B0A;
+  }
+  .tagline {
+    font-size: 12pt;
+    color: #6B6560;
+    margin: 0;
+  }
+  .big-cta {
+    background: #FAF7F1;
+    border: 2px solid #B8860B;
+    border-radius: 12pt;
+    padding: 22pt 26pt;
+    margin: 24pt 0 28pt 0;
+  }
+  .cta-label {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5pt;
+    color: #B8860B;
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+  .cta-headline {
+    font-size: 18pt;
+    font-weight: 700;
+    margin: 0 0 14pt 0;
+    color: #0C0B0A;
+    line-height: 1.3;
+  }
+  .cta-body {
+    font-size: 11pt;
+    color: #4A4540;
+    margin: 0;
+  }
+  .sender-box {
+    background: #FFFFFF;
+    border: 1px solid #E8E4DD;
+    border-radius: 8pt;
+    padding: 14pt 18pt;
+    margin: 14pt 0 10pt 0;
+  }
+  .sender-label {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1pt;
+    color: #6B6560;
+    margin: 0 0 4pt 0;
+  }
+  .sender-value {
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #0C0B0A;
+    margin: 0;
+  }
+  h2 {
+    font-size: 14pt;
+    margin: 26pt 0 10pt 0;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid #E8E4DD;
+    color: #0C0B0A;
+  }
+  .step {
+    display: flex;
+    gap: 14pt;
+    align-items: flex-start;
+    margin-bottom: 16pt;
+  }
+  .step-num {
+    flex: 0 0 26pt;
+    height: 26pt;
+    background: #B8860B;
+    color: #0C0B0A;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 12pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1pt;
+  }
+  .step-body {
+    flex: 1;
+  }
+  .step-title {
+    font-weight: 700;
+    margin: 0 0 3pt 0;
+    color: #0C0B0A;
+    font-size: 12pt;
+  }
+  .step-desc {
+    margin: 0;
+    color: #4A4540;
+    font-size: 10.5pt;
+  }
+  .callout {
+    background: #FFF8EA;
+    border-left: 3px solid #B8860B;
+    padding: 14pt 18pt;
+    border-radius: 4pt;
+    margin: 16pt 0;
+    font-size: 10pt;
+  }
+  .callout strong {
+    color: #7A5A00;
+  }
+  .callout ul {
+    margin: 8pt 0 0 0;
+    padding-left: 18pt;
+  }
+  .callout li {
+    margin-bottom: 4pt;
+  }
+  .whats-inside {
+    background: #FAF7F1;
+    border-radius: 10pt;
+    padding: 18pt 22pt;
+    margin: 18pt 0;
+  }
+  .whats-inside p {
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    color: #0C0B0A;
+  }
+  .whats-inside ul {
+    margin: 0;
+    padding-left: 18pt;
+    list-style: none;
+  }
+  .whats-inside li {
+    position: relative;
+    padding-left: 4pt;
+    margin-bottom: 7pt;
+    font-size: 10.5pt;
+    color: #4A4540;
+  }
+  .whats-inside li:before {
+    content: "✓";
+    color: #B8860B;
+    font-weight: 700;
+    position: absolute;
+    left: -16pt;
+  }
+  .footer {
+    margin-top: 32pt;
+    padding-top: 16pt;
+    border-top: 1px solid #E8E4DD;
+    font-size: 9pt;
+    color: #6B6560;
+    text-align: center;
+  }
+  .footer a {
+    color: #B8860B;
+    text-decoration: none;
+  }
+  strong {
+    color: #0C0B0A;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="dot"></div>
+    <div class="brand-name">Side Hustle Command Centre</div>
+  </div>
+  <h1>Thanks for your order!</h1>
+  <p class="tagline">Your personalized business launch system is almost ready.</p>
+</div>
+
+<div class="big-cta">
+  <p class="cta-label">What's Next</p>
+  <p class="cta-headline">Check your inbox for the setup email</p>
+  <p class="cta-body">
+    We just sent you a second email with your private setup link. It arrives within 1–2 minutes of your purchase.
+  </p>
+  <div class="sender-box">
+    <p class="sender-label">From</p>
+    <p class="sender-value">Carley (Side Hustle Command Centre)</p>
+    <p class="sender-value">hello@thesteadysystem.com</p>
+  </div>
+  <div class="sender-box">
+    <p class="sender-label">Subject line</p>
+    <p class="sender-value">Next step for your Side Hustle Command Centre</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Can't find the email? Check here in this order:</strong>
+  <ul>
+    <li><strong>Primary inbox</strong> — it should be here</li>
+    <li><strong>Promotions tab</strong> (Gmail users) — drag it to Primary so you never lose it</li>
+    <li><strong>Spam or Junk folder</strong></li>
+    <li><strong>Search your inbox</strong> for "thesteadysystem.com"</li>
+  </ul>
+  Still nothing after 5 minutes? Email <strong>hello@thesteadysystem.com</strong> and I'll sort it out personally.
+</div>
+
+<h2>How the next 5 minutes will go</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <p class="step-title">Click the setup link in your email</p>
+    <p class="step-desc">It takes you to a private page on sidehustlecommandcentre.com where your payment is already verified.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <p class="step-title">Answer 13 quick questions about your business</p>
+    <p class="step-desc">Business name, what you sell, your audience, your goals, your timeline. Takes about 3 minutes.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <p class="step-title">Your command centre is built in seconds</p>
+    <p class="step-desc">The AI generates your personalized launch runway, 30-day content plan, first 10 customers roadmap, pricing guide, and more — all based on your answers.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <p class="step-title">Receive your private link by email</p>
+    <p class="step-desc">Bookmark it — that's your forever-access to your command centre. No subscription, no expiration.</p>
+  </div>
+</div>
+
+<h2>What's inside your command centre</h2>
+
+<div class="whats-inside">
+  <p>Everything is personalized to your specific business:</p>
+  <ul>
+    <li><strong>Personalized Launch Runway</strong> — a 4-phase checklist specific to your business type and experience level</li>
+    <li><strong>30-Day Content Calendar</strong> — daily prompts tailored to your platforms and audience</li>
+    <li><strong>AI Business Coach</strong> — 50 included messages, coach already knows your business context</li>
+    <li><strong>First 10 Customers Plan</strong> — specific outreach steps with exact message templates</li>
+    <li><strong>Offer Builder + 3-Tier Pricing Guide</strong> — realistic pricing for your business category</li>
+    <li><strong>Money Tracker</strong> — revenue goals, startup costs, progress tracking</li>
+    <li><strong>CEO Dashboard</strong> — everything at a glance</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <strong>One-time purchase, yours forever.</strong> No subscription, no monthly fees. If you ever need more AI coach messages, they're optional $5 top-ups for 50 more. Most buyers never run out.
+</div>
+
+<h2>Need help? I'm a real person.</h2>
+
+<p>
+  Reply to either email (your Gumroad receipt or your setup email) — or write to <strong>hello@thesteadysystem.com</strong>. That's my direct inbox. I read every message and answer within a few hours, usually much sooner.
+</p>
+
+<p>
+  Thanks for trusting me with your business launch. I can't wait to see what you build.
+</p>
+
+<p>
+  <strong>— Carley Bowyer</strong><br>
+  Founder, The Steady System
+</p>
+
+<div class="footer">
+  Side Hustle Command Centre is built by Carley Bowyer at The Steady System.<br>
+  <a href="https://www.sidehustlecommandcentre.com">sidehustlecommandcentre.com</a>
+  &nbsp;·&nbsp;
+  <a href="mailto:hello@thesteadysystem.com">hello@thesteadysystem.com</a>
+</div>
+
+</body>
+</html>
