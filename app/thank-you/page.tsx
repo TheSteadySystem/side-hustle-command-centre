@@ -1,4 +1,5 @@
 import { stripe } from "@/lib/stripe";
+import { verifyGumroadSale } from "@/lib/gumroad";
 import Link from "next/link";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import IntakeForm from "@/components/IntakeForm";
@@ -6,34 +7,70 @@ import IntakeForm from "@/components/IntakeForm";
 export const dynamic = "force-dynamic";
 
 interface Props {
-  searchParams: { session_id?: string };
+  // Stripe flow: ?session_id=cs_xxx
+  // Gumroad flow: ?sale_id=xxx (Gumroad's default redirect param)
+  //              OR ?gumroad_sale_id=xxx (for manual testing)
+  searchParams: {
+    session_id?: string;
+    sale_id?: string;
+    gumroad_sale_id?: string;
+  };
 }
 
-async function verifyPayment(sessionId: string) {
-  try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    return {
-      paid: session.payment_status === "paid",
-      email: session.customer_details?.email ?? null,
-      name: session.customer_details?.name ?? null,
-    };
-  } catch {
-    return { paid: false, email: null, name: null };
+type Verification = {
+  paid: boolean;
+  email: string | null;
+  name: string | null;
+  stripeSessionId?: string;
+  gumroadSaleId?: string;
+};
+
+async function verifyPayment(
+  params: Props["searchParams"]
+): Promise<Verification | null> {
+  // Prefer Stripe if both somehow present (unlikely)
+  if (params.session_id) {
+    try {
+      const session = await stripe.checkout.sessions.retrieve(params.session_id);
+      return {
+        paid: session.payment_status === "paid",
+        email: session.customer_details?.email ?? null,
+        name: session.customer_details?.name ?? null,
+        stripeSessionId: params.session_id,
+      };
+    } catch {
+      return null;
+    }
   }
+
+  const saleId = params.sale_id || params.gumroad_sale_id;
+  if (saleId) {
+    try {
+      const sale = await verifyGumroadSale(saleId);
+      return {
+        paid: sale.paid,
+        email: sale.email,
+        name: sale.name,
+        gumroadSaleId: saleId,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
 }
 
 export default async function ThankYouPage({ searchParams }: Props) {
-  const sessionId = searchParams.session_id;
+  const verification = await verifyPayment(searchParams);
 
-  if (!sessionId) {
+  if (!verification) {
     return (
-      <ErrorState message="No session ID found. If you just purchased, check your email for the link or contact hello@thesteadysystem.com." />
+      <ErrorState message="No payment found. If you just purchased, check your email for the link or contact hello@thesteadysystem.com." />
     );
   }
 
-  const { paid, email, name } = await verifyPayment(sessionId);
-
-  if (!paid) {
+  if (!verification.paid) {
     return (
       <ErrorState message="We couldn't verify your payment. If you were charged, please email hello@thesteadysystem.com and we'll get you set up right away." />
     );
@@ -69,7 +106,8 @@ export default async function ThankYouPage({ searchParams }: Props) {
           <CheckCircle size={26} style={{ color: "#B8860B" }} />
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
-          Payment received{name ? `, ${name.split(" ")[0]}` : ""}.
+          Payment received
+          {verification.name ? `, ${verification.name.split(" ")[0]}` : ""}.
         </h1>
         <p
           className="mt-4 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
@@ -80,7 +118,7 @@ export default async function ThankYouPage({ searchParams }: Props) {
         </p>
       </section>
 
-      {/* Custom intake form (replaces Tally iframe) */}
+      {/* Intake form */}
       <section className="px-4 pb-20 max-w-2xl mx-auto">
         <div
           className="rounded-2xl p-6 sm:p-8"
@@ -90,9 +128,10 @@ export default async function ThankYouPage({ searchParams }: Props) {
           }}
         >
           <IntakeForm
-            sessionId={sessionId}
-            defaultEmail={email ?? ""}
-            defaultName={name ?? ""}
+            stripeSessionId={verification.stripeSessionId}
+            gumroadSaleId={verification.gumroadSaleId}
+            defaultEmail={verification.email ?? ""}
+            defaultName={verification.name ?? ""}
           />
         </div>
       </section>

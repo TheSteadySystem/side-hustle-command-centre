@@ -4,7 +4,9 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 interface Props {
-  sessionId: string;
+  // Exactly one of these two should be present
+  stripeSessionId?: string;
+  gumroadSaleId?: string;
   defaultEmail?: string;
   defaultName?: string;
 }
@@ -63,7 +65,8 @@ interface FormState {
 }
 
 export default function IntakeForm({
-  sessionId,
+  stripeSessionId,
+  gumroadSaleId,
   defaultEmail = "",
   defaultName = "",
 }: Props) {
@@ -130,10 +133,19 @@ export default function IntakeForm({
     setSubmitting(true);
 
     // Shape the payload to match the Tally format /api/intake already parses.
+    // Include whichever payment ID we were constructed with.
+    const paymentFields: { label: string; value: unknown }[] = [];
+    if (stripeSessionId) {
+      paymentFields.push({ label: "session_id", value: stripeSessionId });
+    }
+    if (gumroadSaleId) {
+      paymentFields.push({ label: "gumroad_sale_id", value: gumroadSaleId });
+    }
+
     const payload = {
       data: {
         fields: [
-          { label: "session_id", value: sessionId },
+          ...paymentFields,
           { label: "first name", value: form.buyer_name },
           { label: "email", value: form.buyer_email },
           { label: "business name", value: form.business_name },

@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { anthropic, AI_COACH_MODEL } from "@/lib/claude";
 import { resend } from "@/lib/resend";
 import { stripe } from "@/lib/stripe";
+import { verifyGumroadSale } from "@/lib/gumroad";
 import { generateSlug, generateToken, resolveColor } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -162,45 +163,71 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No fields received" }, { status: 400 });
     }
 
-    // 0. Verify Stripe payment — session_id comes from the hidden field
-    // set by the thank-you page when embedding the Tally form.
+    // 0. Verify payment — accepts EITHER a Stripe session_id OR a Gumroad sale_id.
+    // Exactly one must be present and verified as paid.
     const sessionId = extract(fields, "session_id");
-    if (!sessionId) {
-      console.error("INTAKE: missing session_id — rejecting");
+    const gumroadSaleId = extract(fields, "gumroad_sale_id");
+
+    if (!sessionId && !gumroadSaleId) {
+      console.error("INTAKE: missing payment identifier — rejecting");
       return NextResponse.json(
-        { error: "Payment not verified — session_id missing" },
+        { error: "Payment not verified — missing session or sale ID" },
         { status: 402 }
       );
     }
 
-    try {
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
-      if (session.payment_status !== "paid") {
-        console.error("INTAKE: stripe session not paid:", session.payment_status);
+    if (sessionId) {
+      // Stripe flow
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        if (session.payment_status !== "paid") {
+          console.error("INTAKE: stripe session not paid:", session.payment_status);
+          return NextResponse.json(
+            { error: "Payment not completed" },
+            { status: 402 }
+          );
+        }
+        console.log("INTAKE: stripe session verified paid:", sessionId);
+      } catch (err) {
+        console.error("INTAKE: stripe verification failed:", err);
         return NextResponse.json(
-          { error: "Payment not completed" },
+          { error: "Payment verification failed" },
           { status: 402 }
         );
       }
-      console.log("INTAKE: stripe session verified paid:", sessionId);
-    } catch (err) {
-      console.error("INTAKE: stripe verification failed:", err);
-      return NextResponse.json(
-        { error: "Payment verification failed" },
-        { status: 402 }
-      );
+    } else {
+      // Gumroad flow
+      try {
+        const sale = await verifyGumroadSale(gumroadSaleId);
+        if (!sale.paid) {
+          console.error("INTAKE: gumroad sale not paid:", gumroadSaleId);
+          return NextResponse.json(
+            { error: "Payment not completed" },
+            { status: 402 }
+          );
+        }
+        console.log("INTAKE: gumroad sale verified paid:", gumroadSaleId);
+      } catch (err) {
+        console.error("INTAKE: gumroad verification failed:", err);
+        return NextResponse.json(
+          { error: "Payment verification failed" },
+          { status: 402 }
+        );
+      }
     }
 
-    // Idempotency: bail if a workspace already exists for this session_id.
-    // This prevents double-submits from creating duplicate workspaces.
+    // Idempotency: bail if a workspace already exists for this payment ID.
+    // Prevents double-submits from creating duplicate workspaces.
+    const idCol = sessionId ? "stripe_session_id" : "gumroad_sale_id";
+    const idVal = sessionId || gumroadSaleId;
     const { data: existing } = await supabase
       .from("workspaces")
       .select("slug, access_token")
-      .eq("stripe_session_id", sessionId)
+      .eq(idCol, idVal)
       .maybeSingle();
 
     if (existing) {
-      console.log("INTAKE: workspace already exists for session_id:", sessionId);
+      console.log("INTAKE: workspace already exists for", idCol, "=", idVal);
       return NextResponse.json({ success: true, slug: existing.slug, duplicate: true });
     }
 
@@ -257,7 +284,8 @@ export async function POST(req: NextRequest) {
           offer_card:           {},
           milestones:           ["system_activated"],
           ai_messages_remaining: 50,
-          stripe_session_id:    sessionId,
+          stripe_session_id:    sessionId || null,
+          gumroad_sale_id:      gumroadSaleId || null,
         })
         .select("id")
         .single();
