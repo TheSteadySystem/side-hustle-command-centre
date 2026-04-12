@@ -73,3 +73,35 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Intake form inputs */
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #141312;
+  color: #F5F0E8;
+  border: 1px solid #2A2825;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.input:focus {
+  border-color: #B8860B;
+  background-color: #1A1918;
+  outline: none;
+}
+.input::placeholder {
+  color: #4A4540;
+}
+select.input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B8860B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
