@@ -102,49 +102,45 @@ Generate a JSON object with these exact keys:
 // ---------------------------------------------------------------------------
 // Welcome email HTML
 // ---------------------------------------------------------------------------
-function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string, brandColor: string): string {
-  return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-  body { font-family: 'DM Sans', system-ui, sans-serif; background: #0C0B0A; color: #F5F0E8; margin: 0; padding: 0; }
-  .wrap { max-width: 600px; margin: 0 auto; padding: 40px 24px; }
-  .label { color: ${brandColor}; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-  h1 { font-size: 26px; font-weight: 700; line-height: 1.3; margin: 14px 0 8px; }
-  .accent { color: ${brandColor}; }
-  p { color: #8A8478; font-size: 15px; line-height: 1.7; margin: 0 0 20px; }
-  .btn { display: inline-block; background: ${brandColor}; color: #0C0B0A; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 12px; text-decoration: none; }
-  hr { border: none; border-top: 1px solid #1F1E1C; margin: 28px 0; }
-  ul { color: #D4CFC6; font-size: 14px; line-height: 1.9; padding-left: 20px; }
-  .footer { color: #4A4540; font-size: 12px; line-height: 1.6; margin-top: 32px; }
-  .link { color: ${brandColor}; word-break: break-all; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <p class="label">Side Hustle Command Centre</p>
-  <h1>Your command centre for<br><span class="accent">${intake.business_name}</span> is ready.</h1>
-  <p>Everything has been built around your answers — your launch runway, 30-day content calendar, pricing guide, and AI business coach are all set up and waiting.</p>
-  <a href="${workspaceUrl}" class="btn">Open Your Command Centre &rarr;</a>
-  <hr>
-  <p style="color:#D4CFC6; margin-bottom:8px;">What&apos;s inside:</p>
-  <ul>
-    <li>✅ Personalized launch runway — 4 phases, specific to your business</li>
-    <li>📱 30-day content calendar for ${(intake.platforms as string[]).join(", ")}</li>
-    <li>💰 Money tracker with your startup cost breakdown</li>
-    <li>⚡ Offer card + 3-tier pricing guide</li>
-    <li>🤖 AI coach with 50 free messages (already knows your business)</li>
-  </ul>
-  <hr>
-  <p>Your private link — bookmark this, it&apos;s your business HQ:<br>
-  <a href="${workspaceUrl}" class="link">${workspaceUrl}</a></p>
-  <p class="footer">— The Steady System<br>
-  Questions? Reply to this email or contact hello@sidehustlecommandcentre.com</p>
-</div>
-</body>
-</html>`;
+// Plain-text email (better deliverability — skips Gmail Promotions tab).
+// Rules: short, conversational, no marketing language, plain text link,
+// no images, no big buttons, no emojis, no hyped CTA.
+function buildEmailText(intake: Record<string, unknown>, workspaceUrl: string): string {
+  return `Hi ${intake.buyer_name},
+
+Your command centre for ${intake.business_name} is ready. Here's your private link:
+
+${workspaceUrl}
+
+Bookmark it — that's where everything lives (your runway, content calendar, AI coach).
+
+When you open it the first time, tap "Generate My Runway" on the Launch Runway tab to build your personalized plan. It takes about 30 seconds. Then the AI coach (50 included messages) will know your business and can guide you from there.
+
+If the email landed in your Promotions or Spam folder, drag it to Primary so you can find it later.
+
+Reply to this email any time — I read every one.
+
+— Carley
+The Steady System`;
+}
+
+function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string): string {
+  // Minimal HTML mirroring the plain text — no styles, no layout, no tracking pixels.
+  // Keeps the email lightweight and deliverability-friendly.
+  const safeBusiness = String(intake.business_name ?? "your business")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const safeName = String(intake.buyer_name ?? "")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return `<p>Hi ${safeName},</p>
+<p>Your command centre for ${safeBusiness} is ready. Here's your private link:</p>
+<p><a href="${workspaceUrl}">${workspaceUrl}</a></p>
+<p>Bookmark it &mdash; that's where everything lives (your runway, content calendar, AI coach).</p>
+<p>When you open it the first time, tap "Generate My Runway" on the Launch Runway tab to build your personalized plan. It takes about 30 seconds. Then the AI coach (50 included messages) will know your business and can guide you from there.</p>
+<p>If the email landed in your Promotions or Spam folder, drag it to Primary so you can find it later.</p>
+<p>Reply to this email any time &mdash; I read every one.</p>
+<p>&mdash; Carley<br>The Steady System</p>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -246,16 +242,25 @@ export async function POST(req: NextRequest) {
     console.log("INTAKE: workspace created:", finalSlug);
 
     // 4. Send welcome email via Resend
-    const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.sidehustlecommandcentre.com";
+    const appUrl       = process.env.NEXT_PUBLIC_APP_URL ?? "https://sidehustlecommandcentre.com";
     const workspaceUrl = `${appUrl}/${finalSlug}?t=${access_token}`;
-    const fromEmail    = process.env.RESEND_FROM_EMAIL ?? "hello@sidehustlecommandcentre.com";
+    const fromEmail    = process.env.RESEND_FROM_EMAIL ?? "Carley <hello@thesteadysystem.com>";
 
     console.log("INTAKE: sending email from:", fromEmail, "to:", intake.buyer_email);
+
+    const emailPayload = {
+      ...intake,
+      business_name: intake.business_name,
+      platforms: intake.platforms,
+    };
+
     const emailResult = await resend.emails.send({
-      from:    fromEmail,
-      to:      intake.buyer_email,
-      subject: `Your Side Hustle Command Centre is ready, ${intake.buyer_name}!`,
-      html:    buildEmailHtml({ ...intake, business_name: intake.business_name, platforms: intake.platforms }, workspaceUrl, brand_color),
+      from:     fromEmail,
+      to:       intake.buyer_email,
+      reply_to: "hello@thesteadysystem.com",
+      subject:  `Your link for ${intake.business_name}`,
+      text:     buildEmailText(emailPayload, workspaceUrl),
+      html:     buildEmailHtml(emailPayload, workspaceUrl),
     });
     console.log("INTAKE: email result:", JSON.stringify(emailResult));
 
