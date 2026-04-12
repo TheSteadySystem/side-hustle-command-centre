@@ -8,6 +8,8 @@ interface Props {
   workspace: Workspace;
   token: string;
   onOpenMessagePack: () => void;
+  tabContext?: string;
+  compact?: boolean;
 }
 
 const COACH_MODES = [
@@ -47,6 +49,8 @@ export default function AICoach({
   workspace,
   token,
   onOpenMessagePack,
+  tabContext,
+  compact = false,
 }: Props) {
   const storedConvo: AIMessage[] = workspace.ai_conversation ?? [];
   const [messages, setMessages] = useState<AIMessage[]>(storedConvo);
@@ -77,7 +81,7 @@ export default function AICoach({
       const res = await fetch("/api/ai-coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ access_token: token, message: text }),
+        body: JSON.stringify({ access_token: token, message: text, tab_context: tabContext }),
       });
 
       const data = await res.json();
@@ -109,7 +113,7 @@ export default function AICoach({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] min-h-[500px] animate-fade-in">
+    <div className={compact ? "flex flex-col h-full animate-fade-in" : "flex flex-col h-[calc(100vh-140px)] min-h-[500px] animate-fade-in"}>
       {/* Header */}
       <div className="pb-4 flex items-center justify-between">
         <div>

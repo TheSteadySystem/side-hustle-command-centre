@@ -13,6 +13,7 @@ import ContentEngine from "@/components/ContentEngine";
 import OfferBuilder from "@/components/OfferBuilder";
 import AICoach from "@/components/AICoach";
 import FirstCustomers from "@/components/FirstCustomers";
+import FloatingCoach from "@/components/FloatingCoach";
 
 type Tab =
   | "dashboard"
@@ -38,6 +39,7 @@ export default function WorkspacePage({
   const [showWelcome, setShowWelcome] = useState(false);
   const [messagePackOpen, setMessagePackOpen] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   const setBrandColors = useCallback((brandColor: string) => {
     const hex = (brandColor ?? "#B8860B").replace("#", "");
@@ -51,49 +53,73 @@ export default function WorkspacePage({
     document.documentElement.style.setProperty("--brand-text-on-brand", luminance > 0.5 ? "#0C0B0A" : "#F5F0E8");
   }, []);
 
-  const fetchWorkspace = useCallback(async (token: string) => {
+  const runGeneration = useCallback(async (token: string) => {
+    setGenerating(true);
+    setGenerationError(null);
     try {
-      const res = await fetch(`/api/workspace/${token}`);
-      if (!res.ok) throw new Error("Workspace not found");
-      const data: Workspace = await res.json();
-      setWorkspace(data);
-      setBrandColors(data.brand_color ?? "#B8860B");
+      const genRes = await fetch("/api/workspace/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token: token }),
+      });
+      const genData = await genRes.json();
 
-      // If content needs generation, trigger it in the background
-      if (data.runway_state?.needs_generation) {
-        setGenerating(true);
-        try {
-          const genRes = await fetch("/api/workspace/generate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ access_token: token }),
-          });
-          if (genRes.ok) {
-            const genData = await genRes.json();
-            if (genData.success) {
-              setWorkspace((prev) =>
-                prev
-                  ? {
-                      ...prev,
-                      runway_state: genData.runway_state,
-                      content_state: genData.content_state,
-                      offer_card: genData.offer_card,
-                    }
-                  : prev
-              );
-            }
-          }
-        } catch {
-          // Generation failed silently — user sees empty states with "generating..." messages
-        }
-        setGenerating(false);
+      if (!genRes.ok || !genData.success) {
+        throw new Error(
+          genData.error ??
+            "Couldn't generate your plan. Tap Generate to try again."
+        );
       }
-    } catch {
-      setError("We couldn't find your workspace. Please check your link.");
+
+      setWorkspace((prev) =>
+        prev
+          ? {
+              ...prev,
+              runway_state: genData.runway_state ?? prev.runway_state,
+              content_state: genData.content_state ?? prev.content_state,
+              offer_card: genData.offer_card ?? prev.offer_card,
+            }
+          : prev
+      );
+    } catch (err) {
+      setGenerationError(
+        err instanceof Error
+          ? err.message
+          : "Generation failed. Tap Generate to try again."
+      );
     } finally {
-      setLoading(false);
+      setGenerating(false);
     }
   }, []);
+
+  const generateContent = useCallback(async () => {
+    const token =
+      searchParams.get("t") ?? localStorage.getItem(TOKEN_KEY) ?? "";
+    if (!token) return;
+    await runGeneration(token);
+  }, [searchParams, runGeneration]);
+
+  const fetchWorkspace = useCallback(
+    async (token: string) => {
+      try {
+        const res = await fetch(`/api/workspace/${token}`);
+        if (!res.ok) throw new Error("Workspace not found");
+        const data: Workspace = await res.json();
+        setWorkspace(data);
+        setBrandColors(data.brand_color ?? "#B8860B");
+
+        // Auto-trigger generation on first load if needed
+        if (data.runway_state?.needs_generation) {
+          await runGeneration(token);
+        }
+      } catch {
+        setError("We couldn't find your workspace. Please check your link.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setBrandColors, runGeneration]
+  );
 
   useEffect(() => {
     // Get token from URL param or localStorage
@@ -210,12 +236,18 @@ export default function WorkspacePage({
             <LaunchRunway
               workspace={workspace}
               updateWorkspace={updateWorkspace}
+              onGenerate={generateContent}
+              isGenerating={generating}
+              generationError={generationError}
             />
           )}
           {activeTab === "customers" && (
             <FirstCustomers
               workspace={workspace}
               updateWorkspace={updateWorkspace}
+              onGenerate={generateContent}
+              isGenerating={generating}
+              generationError={generationError}
             />
           )}
           {activeTab === "money" && (
@@ -228,6 +260,9 @@ export default function WorkspacePage({
             <ContentEngine
               workspace={workspace}
               updateWorkspace={updateWorkspace}
+              onGenerate={generateContent}
+              isGenerating={generating}
+              generationError={generationError}
             />
           )}
           {activeTab === "offer" && (
@@ -249,9 +284,27 @@ export default function WorkspacePage({
           onClose={() => setMessagePackOpen(false)}
         />
       )}
+
+      <FloatingCoach
+        workspace={workspace}
+        token={token}
+        onOpenMessagePack={() => setMessagePackOpen(true)}
+        tabContext={TAB_LABELS[activeTab]}
+        hidden={activeTab === "coach"}
+      />
     </>
   );
 }
+
+const TAB_LABELS: Record<Tab, string> = {
+  dashboard: "Dashboard — your overall progress and focus items",
+  runway: "Launch Runway — the 4-phase launch plan",
+  customers: "First 10 Customers — specific outreach steps",
+  money: "Money Tracker — revenue and startup costs",
+  content: "Content Engine — 30-day content calendar",
+  offer: "Offer Builder — shareable business card and pricing",
+  coach: "AI Coach",
+};
 
 // ---------------------------------------------------------------------------
 // Banner shown at top of workspace while content generates in the background

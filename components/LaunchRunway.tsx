@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { Workspace, RunwayPhase } from "@/lib/types";
 import { getRunwayProgress } from "@/lib/utils";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Sparkles, AlertCircle } from "lucide-react";
 
 interface Props {
   workspace: Workspace;
   updateWorkspace: (field: string, value: unknown) => Promise<void>;
+  onGenerate?: () => Promise<void>;
+  isGenerating?: boolean;
+  generationError?: string | null;
 }
 
-export default function LaunchRunway({ workspace, updateWorkspace }: Props) {
+export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, isGenerating, generationError }: Props) {
   const phases: RunwayPhase[] =
     (workspace.runway_state?.phases as RunwayPhase[]) ?? [];
   const state = workspace.runway_state ?? {};
@@ -56,18 +59,61 @@ export default function LaunchRunway({ workspace, updateWorkspace }: Props) {
 
   if (phases.length === 0) {
     return (
-      <div className="space-y-4">
-        <h2 className="text-text-primary text-xl font-bold">Launch Runway</h2>
+      <div className="space-y-4 animate-fade-in">
+        <div>
+          <h2 className="text-text-primary text-xl font-bold">Launch Runway</h2>
+          <p className="text-text-muted text-sm mt-1">
+            Your personalized path from idea to launch
+          </p>
+        </div>
         <div
-          className="rounded-xl p-8 text-center"
+          className="rounded-xl p-8 text-center space-y-4"
           style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
         >
-          <p className="text-text-muted">
-            Your personalized launch runway is being generated...
-          </p>
-          <p className="text-text-subtle text-sm mt-2">
-            It will appear here once your workspace is fully set up.
-          </p>
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
+            style={{ backgroundColor: "var(--brand-color-20)" }}
+          >
+            <Sparkles size={20} style={{ color: "var(--brand-color)" }} />
+          </div>
+          <div>
+            <p className="text-text-primary font-semibold">
+              Generate your personalized launch runway
+            </p>
+            <p className="text-text-muted text-sm mt-2 max-w-md mx-auto leading-relaxed">
+              Your AI coach will create a 4-phase launch plan tailored to {workspace.business_name} —
+              specific tasks, not generic advice. Takes about 30 seconds.
+            </p>
+          </div>
+
+          {generationError && (
+            <div
+              className="flex items-start gap-2 px-4 py-3 rounded-lg text-left max-w-md mx-auto"
+              style={{
+                backgroundColor: "rgba(239,68,68,0.1)",
+                border: "1px solid rgba(239,68,68,0.3)",
+              }}
+            >
+              <AlertCircle size={14} style={{ color: "#f87171", marginTop: 2 }} />
+              <p className="text-xs" style={{ color: "#f87171" }}>
+                {generationError}
+              </p>
+            </div>
+          )}
+
+          {onGenerate && (
+            <button
+              onClick={onGenerate}
+              disabled={isGenerating}
+              className="px-6 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: "var(--brand-color)",
+                color: "var(--brand-text-on-brand)",
+              }}
+            >
+              {isGenerating ? "Generating..." : "Generate My Runway"}
+            </button>
+          )}
         </div>
       </div>
     );

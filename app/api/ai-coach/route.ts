@@ -10,7 +10,7 @@ import { AIMessage, RunwayPhase } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { access_token, message } = body;
+  const { access_token, message, tab_context } = body;
 
   if (!access_token || !message?.trim()) {
     return NextResponse.json(
@@ -77,7 +77,9 @@ When helping them get customers, give platform-specific tactics for ${(workspace
 
 When asked if they're ready to launch, check their runway progress and be direct — "yes, go" or "not yet, here's what's missing."
 
-If they seem to be outgrowing basic advice, mention that they can book a 1:1 Operations Strategy Session with The Steady System for deeper support. Only mention this when genuinely relevant, not as a sales pitch.`;
+If they seem to be outgrowing basic advice, mention that they can book a 1:1 Operations Strategy Session with The Steady System for deeper support. Only mention this when genuinely relevant, not as a sales pitch.
+
+${tab_context ? `\nTHE USER IS CURRENTLY VIEWING: ${tab_context}\nIf their question seems related to this section, tailor your answer specifically to what they see on this tab. If they haven't generated content yet for this section, guide them to click the "Generate" button.` : ""}`;
 
   // Call Claude
   const response = await anthropic.messages.create({
