@@ -169,7 +169,52 @@ export async function POST(req: NextRequest) {
     const gumroadSaleId = extract(fields, "gumroad_sale_id");
 
     if (!sessionId && !gumroadSaleId) {
-      console.error("INTAKE: missing payment identifier — rejecting");
+      // Someone hit /api/intake without going through the paid checkout flow.
+      // Most likely: a stale Tally submission, a bookmarked old link, or a
+      // fraudster. Send a friendly email redirecting them to the real buy
+      // page, but only if we recovered an email from the submission.
+      const recoveredEmail = extract(fields, "email");
+      const recoveredName = extract(fields, "first name", "your name");
+      console.error(
+        "INTAKE: missing payment identifier — redirecting",
+        recoveredEmail || "(no email)"
+      );
+
+      if (recoveredEmail) {
+        try {
+          const fromEmail =
+            process.env.RESEND_FROM_EMAIL ??
+            "Carley (Side Hustle Command Centre) <hello@thesteadysystem.com>";
+          const buyUrl =
+            process.env.NEXT_PUBLIC_GUMROAD_URL ??
+            "https://steadysoul7.gumroad.com/l/gyzjep";
+          const greeting = recoveredName ? `Hi ${recoveredName},` : "Hi,";
+
+          await resend.emails.send({
+            from: fromEmail,
+            to: recoveredEmail,
+            reply_to: "hello@thesteadysystem.com",
+            subject: "Quick note about your Side Hustle Command Centre",
+            text: `${greeting}
+
+Thanks for filling out the Side Hustle Command Centre quiz! I noticed your submission came in through an older form that's no longer connected to the purchase flow, so your workspace wasn't built automatically.
+
+To get your personalized command centre, grab it here:
+
+${buyUrl}
+
+After checkout you'll answer the same questions again (about 3 minutes) and your system is built and emailed to you instantly.
+
+If you already paid and something went wrong, just reply to this email and I'll sort it out personally.
+
+— Carley
+The Steady System`,
+          });
+        } catch (err) {
+          console.error("INTAKE: recovery email failed", err);
+        }
+      }
+
       return NextResponse.json(
         { error: "Payment not verified — missing session or sale ID" },
         { status: 402 }
