@@ -8,36 +8,62 @@ export const metadata: Metadata = {
     "Stop using generic templates. Get a fully personalized business launch system built around your idea, your goals, and your timeline — in minutes.",
 };
 
+// Brand palette — light theme
+// Ink #1E1E24 (primary text), Stone #E8E4DC (bg), Bronze #7f6720 (primary accent),
+// Violet #b793ff (secondary accent — AI moments only)
+const INK = "#1E1E24";
+const STONE = "#E8E4DC";
+const BRONZE = "#7f6720";
+const VIOLET = "#b793ff";
+
+// Derived surfaces and text tints
+const SURFACE = "#F4F0E7";         // panel bg (one step lighter than Stone)
+const SURFACE_HI = "#FBF7EC";      // elevated panels (pricing card)
+const BORDER = "rgba(30,30,36,0.10)";
+const BORDER_STRONG = "rgba(30,30,36,0.18)";
+const TEXT_BODY = "#3A3A44";       // body copy (slightly softer than pure Ink)
+const TEXT_MUTED = "#6B6A75";      // descriptions
+const TEXT_SUBTLE = "#908F99";     // meta / captions
+const TEXT_FAINT = "#B0AFB8";      // footer links
+const BRONZE_TINT = "rgba(127,103,32,0.12)";
+const VIOLET_TINT = "rgba(183,147,255,0.22)";
+
 const MODULES = [
   {
     icon: Layout,
     name: "CEO Dashboard",
     desc: "Your launch countdown, runway progress, revenue goal, and content streak — all in one place.",
+    ai: false,
   },
   {
     icon: CheckCircle,
     name: "Launch Runway",
     desc: "A 4-phase, personalized checklist of everything you need to do to launch — specific to your business type.",
+    ai: false,
   },
   {
     icon: BarChart2,
     name: "Money Tracker",
     desc: "Track income and expenses, see your startup cost breakdown, and watch your progress toward your goal.",
+    ai: false,
   },
   {
     icon: Calendar,
     name: "Content Engine",
     desc: "30 days of content prompts written specifically for your business, your products, and your platforms.",
+    ai: false,
   },
   {
     icon: Zap,
     name: "Offer Builder",
     desc: "A shareable offer card and 3-tier pricing guide built for your business type.",
+    ai: false,
   },
   {
     icon: MessageCircle,
     name: "AI Business Coach",
     desc: "50 messages with an AI coach that already knows your business, goals, audience, and launch plan.",
+    ai: true,
   },
 ];
 
@@ -70,20 +96,20 @@ const WHATS_DIFFERENT = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0C0B0A", color: "#F5F0E8" }}>
+    <div className="min-h-screen" style={{ backgroundColor: STONE, color: INK }}>
       {/* Nav */}
       <nav
         className="px-6 py-4 flex items-center justify-between max-w-5xl mx-auto"
-        style={{ borderBottom: "1px solid #1F1E1C" }}
+        style={{ borderBottom: `1px solid ${BORDER}` }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#B8860B" }} />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: BRONZE }} />
           <span className="font-semibold text-sm tracking-tight">Side Hustle Command Centre</span>
         </div>
         <BuyButton
           showArrow={false}
           className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-90"
-          style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
+          style={{ backgroundColor: BRONZE, color: STONE }}
         >
           Get Access — $275
         </BuyButton>
@@ -93,20 +119,20 @@ export default function LandingPage() {
       <section className="px-6 py-20 sm:py-28 max-w-4xl mx-auto text-center">
         <p
           className="text-xs uppercase tracking-widest mb-4 font-medium"
-          style={{ color: "#B8860B" }}
+          style={{ color: BRONZE }}
         >
           Stop starting over. Start with a system.
         </p>
         <h1 className="text-4xl sm:text-6xl font-bold tracking-tight leading-tight text-balance">
           Your personalized business
           <br />
-          <span style={{ color: "#B8860B" }}>command centre</span>
+          <span style={{ color: BRONZE }}>command centre</span>
           <br />
           built in minutes.
         </h1>
         <p
           className="mt-6 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto"
-          style={{ color: "#D4CFC6" }}
+          style={{ color: TEXT_BODY }}
         >
           Answer 13 questions about your side hustle. Get a fully customized
           launch system — runway checklist, 30-day content plan, pricing guide,
@@ -116,11 +142,11 @@ export default function LandingPage() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <BuyButton
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
+            style={{ backgroundColor: BRONZE, color: STONE }}
           >
             Build My Command Centre
           </BuyButton>
-          <p style={{ color: "#6B6560" }} className="text-sm">
+          <p style={{ color: TEXT_SUBTLE }} className="text-sm">
             $275 one-time · No subscription · Private link delivered by email
           </p>
         </div>
@@ -129,7 +155,7 @@ export default function LandingPage() {
       {/* Social proof strip */}
       <div
         className="px-6 py-5"
-        style={{ backgroundColor: "#141312", borderTop: "1px solid #1F1E1C", borderBottom: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: SURFACE, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}
       >
         <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-8 text-center">
           {[
@@ -139,10 +165,10 @@ export default function LandingPage() {
             { value: "$0", label: "Monthly fees, ever" },
           ].map(({ value, label }) => (
             <div key={label}>
-              <p className="text-2xl font-bold" style={{ color: "#B8860B" }}>
+              <p className="text-2xl font-bold" style={{ color: BRONZE }}>
                 {value}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: "#6B6560" }}>
+              <p className="text-xs mt-0.5" style={{ color: TEXT_SUBTLE }}>
                 {label}
               </p>
             </div>
@@ -152,27 +178,27 @@ export default function LandingPage() {
 
       {/* What's different */}
       <section className="px-6 py-20 max-w-4xl mx-auto">
-        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#B8860B" }}>
+        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: BRONZE }}>
           Why it works
         </p>
         <h2 className="text-3xl sm:text-4xl font-bold mb-10">
           Not a template. Not a course.
           <br />A system built{" "}
-          <span style={{ color: "#B8860B" }}>around you.</span>
+          <span style={{ color: BRONZE }}>around you.</span>
         </h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {WHATS_DIFFERENT.map((item) => (
             <div
               key={item}
               className="flex items-start gap-3 p-4 rounded-xl"
-              style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
             >
               <CheckCircle
                 size={16}
                 className="flex-shrink-0 mt-0.5"
-                style={{ color: "#B8860B" }}
+                style={{ color: BRONZE }}
               />
-              <span style={{ color: "#D4CFC6" }} className="text-sm leading-relaxed">
+              <span style={{ color: TEXT_BODY }} className="text-sm leading-relaxed">
                 {item}
               </span>
             </div>
@@ -183,10 +209,10 @@ export default function LandingPage() {
       {/* How it works */}
       <section
         className="px-6 py-20"
-        style={{ backgroundColor: "#141312", borderTop: "1px solid #1F1E1C", borderBottom: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: SURFACE, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}
       >
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs uppercase tracking-widest mb-3 text-center" style={{ color: "#B8860B" }}>
+          <p className="text-xs uppercase tracking-widest mb-3 text-center" style={{ color: BRONZE }}>
             How it works
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
@@ -197,14 +223,14 @@ export default function LandingPage() {
               <div key={step} className="space-y-3">
                 <p
                   className="text-5xl font-bold"
-                  style={{ color: "#B8860B", opacity: 0.4 }}
+                  style={{ color: BRONZE, opacity: 0.45 }}
                 >
                   {step}
                 </p>
-                <h3 className="text-lg font-semibold" style={{ color: "#F5F0E8" }}>
+                <h3 className="text-lg font-semibold" style={{ color: INK }}>
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#8A8478" }}>
+                <p className="text-sm leading-relaxed" style={{ color: TEXT_MUTED }}>
                   {desc}
                 </p>
               </div>
@@ -215,32 +241,42 @@ export default function LandingPage() {
 
       {/* What's inside */}
       <section className="px-6 py-20 max-w-4xl mx-auto">
-        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#B8860B" }}>
+        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: BRONZE }}>
           What you get
         </p>
         <h2 className="text-3xl sm:text-4xl font-bold mb-10">
           Six modules. One system.
           <br />
-          <span style={{ color: "#B8860B" }}>All personalized.</span>
+          <span style={{ color: BRONZE }}>All personalized.</span>
         </h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          {MODULES.map(({ icon: Icon, name, desc }) => (
+          {MODULES.map(({ icon: Icon, name, desc, ai }) => (
             <div
               key={name}
               className="flex gap-4 p-5 rounded-xl"
-              style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: "rgba(184,134,11,0.15)" }}
+                style={{ backgroundColor: ai ? VIOLET_TINT : BRONZE_TINT }}
               >
-                <Icon size={18} style={{ color: "#B8860B" }} />
+                <Icon size={18} style={{ color: ai ? INK : BRONZE }} />
               </div>
               <div>
-                <p className="font-semibold text-sm" style={{ color: "#F5F0E8" }}>
-                  {name}
-                </p>
-                <p className="text-sm mt-1 leading-relaxed" style={{ color: "#8A8478" }}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-semibold text-sm" style={{ color: INK }}>
+                    {name}
+                  </p>
+                  {ai && (
+                    <span
+                      className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                      style={{ backgroundColor: VIOLET, color: INK }}
+                    >
+                      AI
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm mt-1 leading-relaxed" style={{ color: TEXT_MUTED }}>
                   {desc}
                 </p>
               </div>
@@ -252,31 +288,31 @@ export default function LandingPage() {
       {/* Pricing */}
       <section
         className="px-6 py-20"
-        style={{ backgroundColor: "#141312", borderTop: "1px solid #1F1E1C", borderBottom: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: SURFACE, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}
       >
         <div className="max-w-md mx-auto text-center">
-          <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#B8860B" }}>
+          <p className="text-xs uppercase tracking-widest mb-3" style={{ color: BRONZE }}>
             Pricing
           </p>
           <h2 className="text-3xl font-bold mb-2">One price. Everything included.</h2>
-          <p className="text-sm mb-8" style={{ color: "#6B6560" }}>
+          <p className="text-sm mb-8" style={{ color: TEXT_SUBTLE }}>
             No monthly fees. No upsells. No templates to fill in yourself.
           </p>
 
           <div
             className="rounded-2xl p-8 text-center"
-            style={{ border: "1px solid #B8860B", backgroundColor: "#0F0E0D" }}
+            style={{ border: `1px solid ${BRONZE}`, backgroundColor: SURFACE_HI }}
           >
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: "rgba(184,134,11,0.15)" }}
+              style={{ backgroundColor: BRONZE_TINT }}
             >
-              <Star size={28} style={{ color: "#B8860B" }} />
+              <Star size={28} style={{ color: BRONZE }} />
             </div>
-            <p className="text-5xl font-bold mb-1" style={{ color: "#F5F0E8" }}>
+            <p className="text-5xl font-bold mb-1" style={{ color: INK }}>
               $275
             </p>
-            <p className="text-sm mb-6" style={{ color: "#6B6560" }}>
+            <p className="text-sm mb-6" style={{ color: TEXT_SUBTLE }}>
               One-time payment
             </p>
             <ul className="space-y-3 text-left mb-8">
@@ -293,9 +329,9 @@ export default function LandingPage() {
                   <CheckCircle
                     size={15}
                     className="flex-shrink-0 mt-0.5"
-                    style={{ color: "#B8860B" }}
+                    style={{ color: BRONZE }}
                   />
-                  <span className="text-sm" style={{ color: "#D4CFC6" }}>
+                  <span className="text-sm" style={{ color: TEXT_BODY }}>
                     {item}
                   </span>
                 </li>
@@ -304,7 +340,7 @@ export default function LandingPage() {
             <BuyButton
               showArrow={false}
               className="block w-full py-4 rounded-xl font-bold text-base transition-opacity hover:opacity-90"
-              style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
+              style={{ backgroundColor: BRONZE, color: STONE }}
             >
               Build My Command Centre →
             </BuyButton>
@@ -345,12 +381,12 @@ export default function LandingPage() {
             <div
               key={q}
               className="rounded-xl p-5 space-y-2"
-              style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+              style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}` }}
             >
-              <p className="font-semibold text-sm" style={{ color: "#F5F0E8" }}>
+              <p className="font-semibold text-sm" style={{ color: INK }}>
                 {q}
               </p>
-              <p className="text-sm leading-relaxed" style={{ color: "#8A8478" }}>
+              <p className="text-sm leading-relaxed" style={{ color: TEXT_MUTED }}>
                 {a}
               </p>
             </div>
@@ -361,25 +397,25 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section
         className="px-6 py-20 text-center"
-        style={{ backgroundColor: "#141312", borderTop: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: SURFACE, borderTop: `1px solid ${BORDER}` }}
       >
         <div className="max-w-2xl mx-auto space-y-6">
           <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
             Your business deserves
             <br />
-            <span style={{ color: "#B8860B" }}>a real system.</span>
+            <span style={{ color: BRONZE }}>a real system.</span>
           </h2>
-          <p className="text-lg" style={{ color: "#8A8478" }}>
+          <p className="text-lg" style={{ color: TEXT_MUTED }}>
             Not another PDF. Not another course. A working command centre that
             knows your business and grows with you.
           </p>
           <BuyButton
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
+            style={{ backgroundColor: BRONZE, color: STONE }}
           >
             Build My Command Centre — $275
           </BuyButton>
-          <p className="text-xs" style={{ color: "#4A4540" }}>
+          <p className="text-xs" style={{ color: TEXT_SUBTLE }}>
             Delivered by email · Private link · Works on any device
           </p>
         </div>
@@ -388,33 +424,33 @@ export default function LandingPage() {
       {/* Footer */}
       <footer
         className="px-6 py-8"
-        style={{ borderTop: "1px solid #1F1E1C" }}
+        style={{ borderTop: `1px solid ${BORDER}` }}
       >
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#B8860B" }} />
-            <span className="text-xs" style={{ color: "#6B6560" }}>
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: BRONZE }} />
+            <span className="text-xs" style={{ color: TEXT_SUBTLE }}>
               Side Hustle Command Centre by{" "}
               <a
                 href="https://thesteadysystem.com"
                 className="hover:underline"
-                style={{ color: "#8A8478" }}
+                style={{ color: TEXT_MUTED }}
               >
                 The Steady System
               </a>
             </span>
           </div>
           <div className="flex gap-6">
-            <a href="/privacy" className="text-xs hover:underline" style={{ color: "#4A4540" }}>
+            <a href="/privacy" className="text-xs hover:underline" style={{ color: TEXT_FAINT }}>
               Privacy
             </a>
-            <a href="/terms" className="text-xs hover:underline" style={{ color: "#4A4540" }}>
+            <a href="/terms" className="text-xs hover:underline" style={{ color: TEXT_FAINT }}>
               Terms
             </a>
             <a
               href="mailto:hello@sidehustlecommandcentre.com"
               className="text-xs hover:underline"
-              style={{ color: "#4A4540" }}
+              style={{ color: TEXT_FAINT }}
             >
               Contact
             </a>
