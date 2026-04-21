@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     description: "Your personalized AI-powered business launch system.",
     images: ["/og-default.png"],
   },
+  other: {
+    "p:domain_verify": "bc09c3a6a2cd8370d39b3c6f7b49af70",
+  },
 };
 
 export default function RootLayout({
