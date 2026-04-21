@@ -71,12 +71,12 @@ const HOW_IT_WORKS = [
   {
     step: "01",
     title: "Answer 13 questions",
-    desc: "Tell us about your business, your platforms, your target customer, and your goals. Takes 3 minutes.",
+    desc: "Tell me about your business, your platforms, your target customer, and your goals. Takes 3 minutes.",
   },
   {
     step: "02",
-    title: "We build your system",
-    desc: "Our AI generates your personalized launch runway, 30-day content plan, pricing guide, and more. Instantly.",
+    title: "I build your system",
+    desc: "My AI generates your personalized launch runway, 30-day content plan, pricing guide, and more. Instantly.",
   },
   {
     step: "03",
