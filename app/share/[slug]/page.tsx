@@ -125,7 +125,7 @@ export default async function SharePage({ params }: Props) {
           className="inline-block px-6 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
           style={{ backgroundColor: brandColor, color: "#E8E4DC" }}
         >
-          Get Your Command Centre · $117
+          Get Your Command Centre · $67
         </Link>
       </div>
     </div>

@@ -56,7 +56,7 @@ export default function TermsPage() {
             </h2>
             <p>
               Side Hustle Command Centre is a personalized, AI-generated business launch system
-              delivered as access to a private online workspace. You pay once ($117 CAD at time of
+              delivered as access to a private online workspace. You pay once ($67 CAD at time of
               writing) and retain access to your workspace for as long as I continue to operate the
               service.
             </p>

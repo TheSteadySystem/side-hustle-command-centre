@@ -111,7 +111,7 @@ export default function LandingPage() {
           className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-90"
           style={{ backgroundColor: BRONZE, color: STONE }}
         >
-          Get Access · $117
+          Get Access · $67
         </BuyButton>
       </nav>
 
@@ -147,7 +147,7 @@ export default function LandingPage() {
             Build My Command Centre
           </BuyButton>
           <p style={{ color: TEXT_SUBTLE }} className="text-sm">
-            $117 one-time · No subscription · Private link delivered by email
+            $67 one-time · No subscription · Private link delivered by email
           </p>
         </div>
       </section>
@@ -340,7 +340,7 @@ export default function LandingPage() {
               <Star size={28} style={{ color: BRONZE }} />
             </div>
             <p className="text-5xl font-bold mb-1" style={{ color: INK }}>
-              $117
+              $67
             </p>
             <p className="text-sm mb-6" style={{ color: TEXT_SUBTLE }}>
               One-time payment
@@ -393,7 +393,7 @@ export default function LandingPage() {
             },
             {
               q: "Is this a monthly subscription?",
-              a: "No. $117 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
+              a: "No. $67 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
             },
             {
               q: "What kind of businesses is this for?",
@@ -443,7 +443,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: BRONZE, color: STONE }}
           >
-            Build My Command Centre · $117
+            Build My Command Centre · $67
           </BuyButton>
           <p className="text-xs" style={{ color: TEXT_SUBTLE }}>
             Delivered by email · Private link · Works on any device
