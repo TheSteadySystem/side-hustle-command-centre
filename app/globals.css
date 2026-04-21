@@ -5,9 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --brand-color: #B8860B;
-  --brand-color-10: rgba(184, 134, 11, 0.1);
-  --brand-color-20: rgba(184, 134, 11, 0.2);
+  --brand-color: #7f6720;
+  --brand-color-10: rgba(127, 103, 32, 0.1);
+  --brand-color-20: rgba(127, 103, 32, 0.2);
+  --brand-alt: #b793ff;
 }
 
 * {
@@ -19,8 +20,8 @@ html {
 }
 
 body {
-  background-color: #0C0B0A;
-  color: #F5F0E8;
+  background-color: #E8E4DC;
+  color: #1E1E24;
   font-family: 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,14 +33,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #141312;
+  background: #F4F0E7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A2825;
+  background: #C4C1BB;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3A3835;
+  background: #AFADA8;
 }
 
 /* Brand color utilities */
@@ -78,30 +79,30 @@ body {
 .input {
   width: 100%;
   padding: 12px 14px;
-  background-color: #141312;
-  color: #F5F0E8;
-  border: 1px solid #2A2825;
+  background-color: #FBF7EC;
+  color: #1E1E24;
+  border: 1px solid #C4C1BB;
   border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
   transition: border-color 0.15s, background-color 0.15s;
 }
 .input:focus {
-  border-color: #B8860B;
-  background-color: #1A1918;
+  border-color: #7f6720;
+  background-color: #FFFFFF;
   outline: none;
 }
 .input::placeholder {
-  color: #4A4540;
+  color: #908F99;
 }
 select.input {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B8860B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237f6720' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 36px;
 }
 .input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.6);
+  filter: none;
   cursor: pointer;
 }

@@ -263,9 +263,9 @@ export default function IntakeForm({
                 onClick={() => togglePlatform(p)}
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all"
                 style={{
-                  backgroundColor: active ? "#B8860B" : "#1A1918",
-                  color: active ? "#0C0B0A" : "#D4CFC6",
-                  border: active ? "1px solid #B8860B" : "1px solid #2A2825",
+                  backgroundColor: active ? "#7f6720" : "#EDE8DC",
+                  color: active ? "#E8E4DC" : "#3A3A44",
+                  border: active ? "1px solid #7f6720" : "1px solid #C4C1BB",
                 }}
               >
                 {p}
@@ -360,7 +360,7 @@ export default function IntakeForm({
           type="text"
           value={form.brand_color}
           onChange={(e) => update("brand_color", e.target.value)}
-          placeholder="pink, #B8860B, navy, etc."
+          placeholder="pink, #7f6720, navy, etc."
           className="input"
         />
       </Field>
@@ -382,16 +382,16 @@ export default function IntakeForm({
         type="submit"
         disabled={submitting}
         className="w-full py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2"
-        style={{ backgroundColor: "#B8860B", color: "#0C0B0A" }}
+        style={{ backgroundColor: "#7f6720", color: "#E8E4DC" }}
       >
         {submitting && <Loader2 size={18} className="animate-spin" />}
         {submitting ? "Building your command centre…" : "Build my command centre →"}
       </button>
 
-      <p className="text-xs text-center" style={{ color: "#4A4540" }}>
+      <p className="text-xs text-center" style={{ color: "#B0AFB8" }}>
         Takes about 30 seconds. You&apos;ll get a private link by email.
       </p>
-      <p className="text-[11px] text-center leading-relaxed" style={{ color: "#4A4540" }}>
+      <p className="text-[11px] text-center leading-relaxed" style={{ color: "#B0AFB8" }}>
         By submitting, you agree to the{" "}
         <a href="/terms" target="_blank" rel="noopener" className="underline">
           Terms
@@ -412,7 +412,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <label className="block">
       <span
         className="block text-sm font-medium mb-2"
-        style={{ color: "#D4CFC6" }}
+        style={{ color: "#3A3A44" }}
       >
         {label}
       </span>

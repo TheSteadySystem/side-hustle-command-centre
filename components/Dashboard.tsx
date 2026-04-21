@@ -35,7 +35,7 @@ function StatCard({
   return (
     <div
       className="rounded-xl p-5 space-y-3 cursor-pointer transition-colors"
-      style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+      style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
@@ -93,7 +93,7 @@ export default function Dashboard({ workspace, onTabChange }: Props) {
       {/* Milestones */}
       <div
         className="rounded-xl p-4"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <p className="text-text-subtle text-xs uppercase tracking-widest mb-3">
           Milestones
@@ -142,7 +142,7 @@ export default function Dashboard({ workspace, onTabChange }: Props) {
       {/* This Week's Focus */}
       <div
         className="rounded-xl p-5 space-y-4"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <p className="text-text-subtle text-xs uppercase tracking-widest">
           This Week&apos;s Focus

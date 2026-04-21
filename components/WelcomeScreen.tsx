@@ -27,7 +27,7 @@ export default function WelcomeScreen({ workspace, onDismiss }: Props) {
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center cursor-pointer"
-      style={{ backgroundColor: "#0C0B0A" }}
+      style={{ backgroundColor: "#E8E4DC" }}
       onClick={onDismiss}
     >
       <div className="text-center space-y-4 px-6">

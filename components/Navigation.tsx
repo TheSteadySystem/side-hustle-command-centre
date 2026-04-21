@@ -22,7 +22,7 @@ interface Props {
 
 export default function Navigation({ activeTab, onTabChange, businessName }: Props) {
   return (
-    <header className="sticky top-0 z-40" style={{ backgroundColor: "#0F0E0D", borderBottom: "1px solid #1F1E1C" }}>
+    <header className="sticky top-0 z-40" style={{ backgroundColor: "#FBF7EC", borderBottom: "1px solid #D8D4C8" }}>
       {/* Top bar */}
       <div className="px-4 sm:px-6 py-3 flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
@@ -49,7 +49,7 @@ export default function Navigation({ activeTab, onTabChange, businessName }: Pro
                 onClick={() => onTabChange(tab.id)}
                 className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium rounded-t-lg transition-colors whitespace-nowrap"
                 style={{
-                  color: isActive ? "var(--brand-color)" : "#6B6560",
+                  color: isActive ? "var(--brand-color)" : "#908F99",
                   borderBottom: isActive ? `2px solid var(--brand-color)` : "2px solid transparent",
                   backgroundColor: isActive ? "var(--brand-color-10)" : "transparent",
                 }}

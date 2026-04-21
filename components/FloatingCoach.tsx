@@ -66,7 +66,7 @@ export default function FloatingCoach({
         <div
           className="fixed bottom-24 right-5 sm:right-8 z-40 max-w-[260px] animate-fade-in"
           style={{
-            backgroundColor: "#1A1918",
+            backgroundColor: "#EDE8DC",
             border: "1px solid var(--brand-color)",
             borderRadius: "12px",
             padding: "12px 14px",
@@ -98,7 +98,7 @@ export default function FloatingCoach({
           <div
             className="absolute -bottom-1 right-6 w-2 h-2 rotate-45"
             style={{
-              backgroundColor: "#1A1918",
+              backgroundColor: "#EDE8DC",
               borderRight: "1px solid var(--brand-color)",
               borderBottom: "1px solid var(--brand-color)",
             }}
@@ -139,8 +139,8 @@ export default function FloatingCoach({
           <div
             className="w-full sm:max-w-md sm:mr-4 sm:mb-4 sm:rounded-2xl overflow-hidden flex flex-col"
             style={{
-              backgroundColor: "#0C0B0A",
-              border: "1px solid #1F1E1C",
+              backgroundColor: "#E8E4DC",
+              border: "1px solid #D8D4C8",
               height: "85vh",
               maxHeight: "700px",
             }}
@@ -149,7 +149,7 @@ export default function FloatingCoach({
             {/* Drawer header */}
             <div
               className="flex items-center justify-between px-4 py-3 border-b"
-              style={{ borderColor: "#1F1E1C" }}
+              style={{ borderColor: "#D8D4C8" }}
             >
               <div>
                 <p className="text-text-primary font-semibold text-sm">AI Coach</p>

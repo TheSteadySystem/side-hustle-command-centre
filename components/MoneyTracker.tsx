@@ -39,20 +39,20 @@ function StatCard({
     <div
       className="rounded-xl p-4 space-y-2"
       style={{
-        backgroundColor: "#141312",
-        border: accent ? "1px solid var(--brand-color)" : "1px solid #1F1E1C",
+        backgroundColor: "#F4F0E7",
+        border: accent ? "1px solid var(--brand-color)" : "1px solid #D8D4C8",
       }}
     >
       <div className="flex items-center justify-between">
         <span className="text-text-subtle text-xs uppercase tracking-widest">{label}</span>
         <Icon
           size={15}
-          style={{ color: accent ? "var(--brand-color)" : "#6B6560" }}
+          style={{ color: accent ? "var(--brand-color)" : "#908F99" }}
         />
       </div>
       <p
         className="text-xl font-bold"
-        style={{ color: accent ? "var(--brand-color)" : "#F5F0E8" }}
+        style={{ color: accent ? "var(--brand-color)" : "#1E1E24" }}
       >
         {value}
       </p>
@@ -163,7 +163,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
       {chartData.length > 0 && (
         <div
           className="rounded-xl p-5"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <p className="text-text-muted text-xs uppercase tracking-widest mb-4">
             Revenue vs Goal
@@ -172,23 +172,23 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
             <BarChart data={chartData} barGap={4}>
               <XAxis
                 dataKey="month"
-                tick={{ fill: "#6B6560", fontSize: 11 }}
+                tick={{ fill: "#908F99", fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis hide />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1A1918",
-                  border: "1px solid #2A2825",
+                  backgroundColor: "#EDE8DC",
+                  border: "1px solid #C4C1BB",
                   borderRadius: "8px",
-                  color: "#F5F0E8",
+                  color: "#1E1E24",
                   fontSize: "12px",
                 }}
                 formatter={(v) => formatCurrency(Number(v))}
               />
               <Bar dataKey="revenue" fill="var(--brand-color)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="goal" fill="#2A2825" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="goal" fill="#C4C1BB" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -198,7 +198,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
       {startupCosts.length > 0 && (
         <div
           className="rounded-xl p-5 space-y-3"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <p className="text-text-muted text-xs uppercase tracking-widest">
             Startup Cost Breakdown
@@ -213,7 +213,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
           ))}
           <div
             className="flex items-center justify-between pt-2"
-            style={{ borderTop: "1px solid #1F1E1C" }}
+            style={{ borderTop: "1px solid #D8D4C8" }}
           >
             <span className="text-text-muted text-sm font-medium">Total</span>
             <span className="font-bold" style={{ color: "var(--brand-color)" }}>
@@ -228,7 +228,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
       {/* Revenue entries */}
       <div
         className="rounded-xl overflow-hidden"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <div className="px-5 py-4 flex items-center justify-between">
           <p className="text-text-muted text-xs uppercase tracking-widest">
@@ -251,7 +251,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
         {showForm && (
           <div
             className="px-5 pb-4 space-y-3"
-            style={{ borderTop: "1px solid #1F1E1C" }}
+            style={{ borderTop: "1px solid #D8D4C8" }}
           >
             <div className="pt-3 grid grid-cols-2 gap-3">
               <input
@@ -259,7 +259,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
                 value={form.date}
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
                 className="col-span-1 px-3 py-2 rounded-lg text-sm text-text-primary"
-                style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+                style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
               />
               <select
                 value={form.type}
@@ -267,7 +267,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
                   setForm({ ...form, type: e.target.value as "income" | "expense" })
                 }
                 className="col-span-1 px-3 py-2 rounded-lg text-sm text-text-primary"
-                style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+                style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
               >
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
@@ -279,7 +279,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="w-full px-3 py-2 rounded-lg text-sm text-text-primary placeholder:text-text-ghost"
-              style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+              style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
             />
             <input
               type="number"
@@ -287,14 +287,14 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               className="w-full px-3 py-2 rounded-lg text-sm text-text-primary placeholder:text-text-ghost"
-              style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+              style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
             />
             <div className="flex gap-2">
               <button
                 onClick={addEntry}
                 disabled={saving || !form.description || !form.amount}
                 className="flex-1 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 transition-opacity"
-                style={{ backgroundColor: "var(--brand-color)", color: "#0C0B0A" }}
+                style={{ backgroundColor: "var(--brand-color)", color: "#E8E4DC" }}
               >
                 {saving ? "Saving..." : "Save Entry"}
               </button>
@@ -315,7 +315,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: "#1F1E1C" }}>
+          <div className="divide-y" style={{ borderColor: "#D8D4C8" }}>
             {[...entries]
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map((entry) => (
@@ -328,7 +328,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
                     className="text-sm font-semibold"
                     style={{
                       color:
-                        entry.type === "income" ? "var(--brand-color)" : "#8A8478",
+                        entry.type === "income" ? "var(--brand-color)" : "#6B6A75",
                     }}
                   >
                     {entry.type === "income" ? "+" : "-"}

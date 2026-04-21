@@ -42,7 +42,7 @@ export default function WorkspacePage({
   const [generationError, setGenerationError] = useState<string | null>(null);
 
   const setBrandColors = useCallback((brandColor: string) => {
-    const hex = (brandColor ?? "#B8860B").replace("#", "");
+    const hex = (brandColor ?? "#7f6720").replace("#", "");
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
@@ -50,7 +50,7 @@ export default function WorkspacePage({
     document.documentElement.style.setProperty("--brand-color-10", `rgba(${r}, ${g}, ${b}, 0.1)`);
     document.documentElement.style.setProperty("--brand-color-20", `rgba(${r}, ${g}, ${b}, 0.2)`);
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    document.documentElement.style.setProperty("--brand-text-on-brand", luminance > 0.5 ? "#0C0B0A" : "#F5F0E8");
+    document.documentElement.style.setProperty("--brand-text-on-brand", luminance > 0.5 ? "#1E1E24" : "#E8E4DC");
   }, []);
 
   const runGeneration = useCallback(async (token: string) => {
@@ -106,7 +106,7 @@ export default function WorkspacePage({
         if (!res.ok) throw new Error("Workspace not found");
         const data: Workspace = await res.json();
         setWorkspace(data);
-        setBrandColors(data.brand_color ?? "#B8860B");
+        setBrandColors(data.brand_color ?? "#7f6720");
 
         // Auto-trigger generation on first load if needed
         if (data.runway_state?.needs_generation) {

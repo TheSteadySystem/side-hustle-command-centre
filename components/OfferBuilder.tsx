@@ -15,7 +15,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
     (workspace.runway_state?.pricing_guide as PricingTier[]) ?? [];
   const readyChecklist: ReadyChecklistItem[] =
     (workspace.runway_state?.ready_checklist as ReadyChecklistItem[]) ?? [];
-  const brandColor = workspace.brand_color ?? "#B8860B";
+  const brandColor = workspace.brand_color ?? "#7f6720";
 
   const [card, setCard] = useState<OfferCard>({
     headline: existing.headline ?? workspace.business_name,
@@ -43,9 +43,9 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
   };
 
   const TIER_COLORS: Record<string, string> = {
-    Entry: "#6B6560",
+    Entry: "#908F99",
     Core: "var(--brand-color)",
-    Premium: "#F5F0E8",
+    Premium: "#1E1E24",
   };
 
   return (
@@ -61,7 +61,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
         {/* Editor */}
         <div
           className="rounded-xl p-5 space-y-4"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <p className="text-text-muted text-xs uppercase tracking-widest">
             Edit Your Card
@@ -82,7 +82,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
                 value={card[key] ?? ""}
                 onChange={(e) => setCard({ ...card, [key]: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg text-sm text-text-primary placeholder:text-text-ghost"
-                style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+                style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
               />
             </div>
           ))}
@@ -90,7 +90,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
           <button
             onClick={saveCard}
             className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all"
-            style={{ backgroundColor: "var(--brand-color)", color: "#0C0B0A" }}
+            style={{ backgroundColor: "var(--brand-color)", color: "#E8E4DC" }}
           >
             {saved ? "Saved!" : "Save Card"}
           </button>
@@ -106,36 +106,36 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
             <div style={{ backgroundColor: brandColor, height: "5px" }} />
             <div
               className="p-6 space-y-4"
-              style={{ backgroundColor: "#141312" }}
+              style={{ backgroundColor: "#F4F0E7" }}
             >
               <div>
                 <h3
                   className="text-2xl font-bold"
-                  style={{ color: "#F5F0E8" }}
+                  style={{ color: "#1E1E24" }}
                 >
                   {card.headline || workspace.business_name}
                 </h3>
-                <p className="mt-1 text-base" style={{ color: "#D4CFC6" }}>
+                <p className="mt-1 text-base" style={{ color: "#3A3A44" }}>
                   {card.tagline || workspace.tagline}
                 </p>
               </div>
 
-              <hr style={{ borderColor: "#1F1E1C" }} />
+              <hr style={{ borderColor: "#D8D4C8" }} />
 
               <div className="space-y-2">
                 {card.what && (
                   <div>
-                    <p className="text-xs uppercase tracking-widest" style={{ color: "#8A8478" }}>
+                    <p className="text-xs uppercase tracking-widest" style={{ color: "#6B6A75" }}>
                       What we do
                     </p>
-                    <p className="text-sm mt-0.5" style={{ color: "#D4CFC6" }}>
+                    <p className="text-sm mt-0.5" style={{ color: "#3A3A44" }}>
                       {card.what}
                     </p>
                   </div>
                 )}
                 {card.platforms && (
                   <div>
-                    <p className="text-xs uppercase tracking-widest" style={{ color: "#8A8478" }}>
+                    <p className="text-xs uppercase tracking-widest" style={{ color: "#6B6A75" }}>
                       Find us on
                     </p>
                     <p className="text-sm mt-0.5" style={{ color: brandColor }}>
@@ -145,7 +145,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
                 )}
               </div>
 
-              <p className="text-xs text-center" style={{ color: "#3A3835" }}>
+              <p className="text-xs text-center" style={{ color: "#AFADA8" }}>
                 Built with Side Hustle Command Centre
               </p>
             </div>
@@ -171,9 +171,9 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
               style={{
-                backgroundColor: "#141312",
-                color: "#8A8478",
-                border: "1px solid #1F1E1C",
+                backgroundColor: "#F4F0E7",
+                color: "#6B6A75",
+                border: "1px solid #D8D4C8",
               }}
             >
               <Share2 size={14} />
@@ -186,7 +186,7 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
       {pricingGuide.length > 0 && (
         <div
           className="rounded-xl p-5 space-y-4"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <p className="text-text-muted text-xs uppercase tracking-widest">
             Pricing Guide
@@ -197,17 +197,17 @@ export default function OfferBuilder({ workspace, updateWorkspace }: Props) {
                 key={tier.tier}
                 className="rounded-xl p-4 space-y-2"
                 style={{
-                  backgroundColor: "#1A1918",
+                  backgroundColor: "#EDE8DC",
                   border:
                     tier.tier === "Core"
                       ? "1px solid var(--brand-color)"
-                      : "1px solid #2A2825",
+                      : "1px solid #C4C1BB",
                 }}
               >
                 <div className="flex items-center justify-between">
                   <p
                     className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: TIER_COLORS[tier.tier] ?? "#8A8478" }}
+                    style={{ color: TIER_COLORS[tier.tier] ?? "#6B6A75" }}
                   >
                     {tier.tier}
                   </p>
@@ -284,7 +284,7 @@ function ReadyToSell({
   return (
     <div
       className="rounded-xl p-5 space-y-4"
-      style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+      style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
     >
       <div className="flex items-center justify-between">
         <p className="text-text-muted text-xs uppercase tracking-widest">
@@ -313,7 +313,7 @@ function ReadyToSell({
                 className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all"
                 style={{
                   backgroundColor: isDone ? "var(--brand-color)" : "transparent",
-                  borderColor: isDone ? "var(--brand-color)" : "#2A2825",
+                  borderColor: isDone ? "var(--brand-color)" : "#C4C1BB",
                 }}
               >
                 {isDone && <Check size={11} style={{ color: "var(--brand-text-on-brand)" }} />}
@@ -321,7 +321,7 @@ function ReadyToSell({
               <span
                 className="text-sm flex-1"
                 style={{
-                  color: isDone ? "#4A4540" : "#D4CFC6",
+                  color: isDone ? "#B0AFB8" : "#3A3A44",
                   textDecoration: isDone ? "line-through" : "none",
                 }}
               >

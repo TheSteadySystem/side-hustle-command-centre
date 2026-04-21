@@ -53,7 +53,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
         </div>
         <div
           className="rounded-xl p-8 text-center space-y-4"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
@@ -117,7 +117,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
       {/* Progress */}
       <div
         className="rounded-xl p-5"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <div className="flex items-center justify-between mb-3">
           <span className="text-text-secondary text-sm font-medium">Progress</span>
@@ -125,7 +125,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
             {doneCount}/{steps.length}
           </span>
         </div>
-        <div className="h-2 rounded-full" style={{ backgroundColor: "#2A2825" }}>
+        <div className="h-2 rounded-full" style={{ backgroundColor: "#C4C1BB" }}>
           <div
             className="h-2 rounded-full transition-all duration-500"
             style={{
@@ -153,8 +153,8 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
               onClick={() => toggleStep(i)}
               className="w-full rounded-xl p-4 text-left transition-all hover:bg-bg-cardHover"
               style={{
-                backgroundColor: "#141312",
-                border: isDone ? "1px solid var(--brand-color)" : "1px solid #1F1E1C",
+                backgroundColor: "#F4F0E7",
+                border: isDone ? "1px solid var(--brand-color)" : "1px solid #D8D4C8",
                 opacity: isDone ? 0.7 : 1,
               }}
             >
@@ -164,7 +164,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
                   className="mt-0.5 w-6 h-6 rounded flex items-center justify-center flex-shrink-0 border transition-all"
                   style={{
                     backgroundColor: isDone ? "var(--brand-color)" : "transparent",
-                    borderColor: isDone ? "var(--brand-color)" : "#2A2825",
+                    borderColor: isDone ? "var(--brand-color)" : "#C4C1BB",
                   }}
                 >
                   {isDone && <Check size={12} style={{ color: "var(--brand-text-on-brand)" }} />}
@@ -195,7 +195,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
                   <p
                     className="text-sm font-semibold leading-relaxed"
                     style={{
-                      color: isDone ? "#4A4540" : "#F5F0E8",
+                      color: isDone ? "#B0AFB8" : "#1E1E24",
                       textDecoration: isDone ? "line-through" : "none",
                     }}
                   >
@@ -203,7 +203,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
                   </p>
                   <p
                     className="text-xs leading-relaxed"
-                    style={{ color: isDone ? "#3A3835" : "#8A8478" }}
+                    style={{ color: isDone ? "#AFADA8" : "#6B6A75" }}
                   >
                     {step.detail}
                   </p>

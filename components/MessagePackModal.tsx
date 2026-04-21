@@ -42,7 +42,7 @@ export default function MessagePackModal({ token, onClose }: Props) {
     >
       <div
         className="w-full max-w-sm rounded-2xl p-6 space-y-5"
-        style={{ backgroundColor: "#141312", border: "1px solid #2A2825" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #C4C1BB" }}
       >
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -74,7 +74,7 @@ export default function MessagePackModal({ token, onClose }: Props) {
         {/* Pricing */}
         <div
           className="rounded-xl p-4 flex items-center justify-between"
-          style={{ backgroundColor: "#1A1918", border: "1px solid #2A2825" }}
+          style={{ backgroundColor: "#EDE8DC", border: "1px solid #C4C1BB" }}
         >
           <div>
             <p className="text-text-primary font-semibold">50 AI Messages</p>
@@ -97,7 +97,7 @@ export default function MessagePackModal({ token, onClose }: Props) {
             onClick={handleBuy}
             disabled={loading}
             className="w-full py-3 rounded-xl font-semibold text-sm disabled:opacity-50 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "var(--brand-color)", color: "#0C0B0A" }}
+            style={{ backgroundColor: "var(--brand-color)", color: "#E8E4DC" }}
           >
             {loading ? "Opening checkout..." : "Buy Messages · $5"}
           </button>

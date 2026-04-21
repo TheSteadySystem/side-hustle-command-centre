@@ -12,26 +12,27 @@ const config: Config = {
         sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       colors: {
+        // Light theme. Ink text on Stone bg. Bronze accent.
         bg: {
-          primary: "#0C0B0A",
-          card: "#141312",
-          cardHover: "#1A1918",
-          input: "#141312",
-          overlay: "#0F0E0D",
+          primary: "#E8E4DC",   // Stone, page bg
+          card: "#F4F0E7",      // Surface, panels/cards
+          cardHover: "#EDE8DC", // slightly darker hover
+          input: "#F4F0E7",     // form inputs
+          overlay: "#FBF7EC",   // elevated surface
         },
         text: {
-          primary: "#F5F0E8",
-          secondary: "#D4CFC6",
-          muted: "#8A8478",
-          subtle: "#6B6560",
-          faint: "#4A4540",
-          ghost: "#3A3835",
+          primary: "#1E1E24",   // Ink, headings / primary
+          secondary: "#3A3A44", // body copy
+          muted: "#6B6A75",     // descriptions
+          subtle: "#908F99",    // meta / captions
+          faint: "#B0AFB8",     // footer / least emphasis
+          ghost: "#C5C4CC",     // disabled / decorative
         },
         border: {
-          primary: "#1F1E1C",
-          subtle: "#1A1918",
-          input: "#2A2825",
-          hover: "#3A3835",
+          primary: "#D8D4C8",   // subtle border on Stone
+          subtle: "#E0DDD2",
+          input: "#C4C1BB",
+          hover: "#AFADA8",
         },
       },
       animation: {

@@ -33,7 +33,7 @@ export default function WeeklyPlanner({ weeklyPlan }: Props) {
   return (
     <div
       className="rounded-xl p-5 space-y-4"
-      style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+      style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -57,7 +57,7 @@ export default function WeeklyPlanner({ weeklyPlan }: Props) {
                   <div
                     key={i}
                     className="flex items-center gap-3 p-2.5 rounded-lg"
-                    style={{ backgroundColor: "#1A1918" }}
+                    style={{ backgroundColor: "#EDE8DC" }}
                   >
                     <div
                       className="w-1 h-8 rounded-full flex-shrink-0"
@@ -86,7 +86,7 @@ export default function WeeklyPlanner({ weeklyPlan }: Props) {
       </div>
 
       {/* Legend + total */}
-      <div className="flex items-center justify-between pt-2" style={{ borderTop: "1px solid #1F1E1C" }}>
+      <div className="flex items-center justify-between pt-2" style={{ borderTop: "1px solid #D8D4C8" }}>
         <div className="flex gap-3">
           {Object.entries(CATEGORY_STYLES).map(([key, { color, label }]) => (
             <div key={key} className="flex items-center gap-1">

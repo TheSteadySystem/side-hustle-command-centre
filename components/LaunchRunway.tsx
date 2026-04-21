@@ -68,7 +68,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
         </div>
         <div
           className="rounded-xl p-8 text-center space-y-4"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
@@ -132,7 +132,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
       {/* Overall progress */}
       <div
         className="rounded-xl p-5"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <div className="flex items-center justify-between mb-3">
           <span className="text-text-secondary text-sm font-medium">Overall Progress</span>
@@ -140,7 +140,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
             {progress}%
           </span>
         </div>
-        <div className="h-2 rounded-full" style={{ backgroundColor: "#2A2825" }}>
+        <div className="h-2 rounded-full" style={{ backgroundColor: "#C4C1BB" }}>
           <div
             className="h-2 rounded-full transition-all duration-500"
             style={{ width: `${progress}%`, backgroundColor: "var(--brand-color)" }}
@@ -165,10 +165,10 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
               key={pi}
               className="rounded-xl overflow-hidden"
               style={{
-                backgroundColor: "#141312",
+                backgroundColor: "#F4F0E7",
                 border: phaseComplete
                   ? "1px solid var(--brand-color)"
-                  : "1px solid #1F1E1C",
+                  : "1px solid #D8D4C8",
               }}
             >
               {/* Phase header */}
@@ -183,7 +183,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
                       backgroundColor: phaseComplete
                         ? "var(--brand-color)"
                         : "var(--brand-color-20)",
-                      color: phaseComplete ? "#0C0B0A" : "var(--brand-color)",
+                      color: phaseComplete ? "#E8E4DC" : "var(--brand-color)",
                     }}
                   >
                     {phaseComplete ? <Check size={12} /> : pi + 1}
@@ -208,7 +208,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
                 <div className="px-5 pb-4 space-y-2">
                   <div
                     className="h-px mb-3"
-                    style={{ backgroundColor: "#1F1E1C" }}
+                    style={{ backgroundColor: "#D8D4C8" }}
                   />
                   {phase.items.map((item, ii) => {
                     const done = !!state[`${pi}_${ii}`];
@@ -222,15 +222,15 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
                           className="mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all"
                           style={{
                             backgroundColor: done ? "var(--brand-color)" : "transparent",
-                            borderColor: done ? "var(--brand-color)" : "#2A2825",
+                            borderColor: done ? "var(--brand-color)" : "#C4C1BB",
                           }}
                         >
-                          {done && <Check size={11} color="#0C0B0A" />}
+                          {done && <Check size={11} color="#E8E4DC" />}
                         </div>
                         <span
                           className="text-sm leading-relaxed transition-all"
                           style={{
-                            color: done ? "#4A4540" : "#D4CFC6",
+                            color: done ? "#B0AFB8" : "#3A3A44",
                             textDecoration: done ? "line-through" : "none",
                           }}
                         >

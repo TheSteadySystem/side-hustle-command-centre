@@ -64,7 +64,7 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
         </div>
         <div
           className="rounded-xl p-8 text-center space-y-4"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
@@ -129,7 +129,7 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
       <div className="flex gap-3">
         <div
           className="flex-1 rounded-xl p-4 text-center"
-          style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+          style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
         >
           <p className="text-2xl font-bold text-text-primary">{doneCount}/30</p>
           <p className="text-text-subtle text-xs mt-1">Posts Done</p>
@@ -137,14 +137,14 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
         <div
           className="flex-1 rounded-xl p-4 text-center"
           style={{
-            backgroundColor: "#141312",
-            border: streak > 0 ? "1px solid var(--brand-color)" : "1px solid #1F1E1C",
+            backgroundColor: "#F4F0E7",
+            border: streak > 0 ? "1px solid var(--brand-color)" : "1px solid #D8D4C8",
           }}
         >
           <div className="flex items-center justify-center gap-1">
             <p
               className="text-2xl font-bold"
-              style={{ color: streak > 0 ? "var(--brand-color)" : "#F5F0E8" }}
+              style={{ color: streak > 0 ? "var(--brand-color)" : "#1E1E24" }}
             >
               {streak}
             </p>
@@ -160,7 +160,7 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
       <div className="grid gap-3 sm:grid-cols-2">
         {prompts.map((prompt) => {
           const isDone = !!contentState[String(prompt.day)];
-          const typeColor = TYPE_COLORS[prompt.type] ?? "#8A8478";
+          const typeColor = TYPE_COLORS[prompt.type] ?? "#6B6A75";
 
           return (
             <button
@@ -168,10 +168,10 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
               onClick={() => toggleDay(prompt.day)}
               className="rounded-xl p-4 text-left transition-all hover:bg-bg-cardHover"
               style={{
-                backgroundColor: "#141312",
+                backgroundColor: "#F4F0E7",
                 border: isDone
                   ? "1px solid var(--brand-color)"
-                  : "1px solid #1F1E1C",
+                  : "1px solid #D8D4C8",
                 opacity: isDone ? 0.7 : 1,
               }}
             >
@@ -200,7 +200,7 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
                   <p
                     className="text-sm leading-relaxed"
                     style={{
-                      color: isDone ? "#4A4540" : "#D4CFC6",
+                      color: isDone ? "#B0AFB8" : "#3A3A44",
                       textDecoration: isDone ? "line-through" : "none",
                     }}
                   >
@@ -215,10 +215,10 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
                     backgroundColor: isDone ? "var(--brand-color)" : "transparent",
                     border: isDone
                       ? "none"
-                      : "1px solid #2A2825",
+                      : "1px solid #C4C1BB",
                   }}
                 >
-                  {isDone && <Check size={12} color="#0C0B0A" />}
+                  {isDone && <Check size={12} color="#E8E4DC" />}
                 </div>
               </div>
             </button>

@@ -48,9 +48,9 @@ export default function MilestoneBar({ milestones }: Props) {
                     border: "1px solid var(--brand-color)",
                   }
                 : {
-                    backgroundColor: "#141312",
-                    color: "#4A4540",
-                    border: "1px solid #1F1E1C",
+                    backgroundColor: "#F4F0E7",
+                    color: "#B0AFB8",
+                    border: "1px solid #D8D4C8",
                     opacity: 0.6,
                   }
             }

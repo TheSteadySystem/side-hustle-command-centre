@@ -38,18 +38,18 @@ export default async function SharePage({ params }: Props) {
 
   const offerCard = workspace.offer_card ?? {};
   const platforms = workspace.platforms ?? [];
-  const brandColor = workspace.brand_color ?? "#B8860B";
+  const brandColor = workspace.brand_color ?? "#7f6720";
 
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-4 py-16"
-      style={{ backgroundColor: "#0C0B0A" }}
+      style={{ backgroundColor: "#E8E4DC" }}
     >
       {/* Offer Card */}
       <div
         className="w-full max-w-md rounded-2xl overflow-hidden"
         style={{
-          backgroundColor: "#141312",
+          backgroundColor: "#F4F0E7",
           border: `1px solid ${brandColor}40`,
         }}
       >
@@ -61,30 +61,30 @@ export default async function SharePage({ params }: Props) {
           <div>
             <h1
               className="text-3xl font-bold tracking-tight"
-              style={{ color: "#F5F0E8" }}
+              style={{ color: "#1E1E24" }}
             >
               {offerCard.headline ?? workspace.business_name}
             </h1>
-            <p className="mt-2 text-lg" style={{ color: "#D4CFC6" }}>
+            <p className="mt-2 text-lg" style={{ color: "#3A3A44" }}>
               {offerCard.tagline ?? workspace.tagline}
             </p>
           </div>
 
-          <hr style={{ borderColor: "#1F1E1C" }} />
+          <hr style={{ borderColor: "#D8D4C8" }} />
 
           {/* Details */}
           <div className="space-y-3">
             <div>
-              <span className="text-xs uppercase tracking-widest" style={{ color: "#8A8478" }}>
+              <span className="text-xs uppercase tracking-widest" style={{ color: "#6B6A75" }}>
                 What we do
               </span>
-              <p className="mt-1" style={{ color: "#D4CFC6" }}>
+              <p className="mt-1" style={{ color: "#3A3A44" }}>
                 {offerCard.what ?? workspace.business_type}
               </p>
             </div>
             {platforms.length > 0 && (
               <div>
-                <span className="text-xs uppercase tracking-widest" style={{ color: "#8A8478" }}>
+                <span className="text-xs uppercase tracking-widest" style={{ color: "#6B6A75" }}>
                   Find us on
                 </span>
                 <div className="flex flex-wrap gap-2 mt-1">
@@ -106,10 +106,10 @@ export default async function SharePage({ params }: Props) {
             )}
           </div>
 
-          <hr style={{ borderColor: "#1F1E1C" }} />
+          <hr style={{ borderColor: "#D8D4C8" }} />
 
           {/* Watermark */}
-          <p className="text-xs text-center" style={{ color: "#4A4540" }}>
+          <p className="text-xs text-center" style={{ color: "#B0AFB8" }}>
             Built with Side Hustle Command Centre
           </p>
         </div>
@@ -117,13 +117,13 @@ export default async function SharePage({ params }: Props) {
 
       {/* CTA */}
       <div className="mt-8 text-center space-y-3">
-        <p style={{ color: "#8A8478" }} className="text-sm">
+        <p style={{ color: "#6B6A75" }} className="text-sm">
           Want a personalized command centre like this?
         </p>
         <Link
           href={process.env.NEXT_PUBLIC_APP_URL ?? "https://sidehustlecommandcentre.com"}
           className="inline-block px-6 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
-          style={{ backgroundColor: brandColor, color: "#0C0B0A" }}
+          style={{ backgroundColor: brandColor, color: "#E8E4DC" }}
         >
           Get Your Command Centre · $117
         </Link>

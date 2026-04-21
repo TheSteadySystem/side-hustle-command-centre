@@ -147,7 +147,7 @@ export default function AICoach({
                 key={mode.label}
                 onClick={() => sendMessage(mode.prompt)}
                 className="flex items-center gap-2.5 p-3 rounded-xl text-left transition-colors hover:bg-bg-cardHover"
-                style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+                style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
               >
                 <span className="text-lg flex-shrink-0">{mode.icon}</span>
                 <span className="text-text-secondary text-xs font-medium leading-snug">
@@ -162,7 +162,7 @@ export default function AICoach({
       {/* Messages */}
       <div
         className="flex-1 overflow-y-auto space-y-3 rounded-xl p-4 mb-3"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         {messages.length === 0 && (
           <div className="h-full flex items-center justify-center">
@@ -196,8 +196,8 @@ export default function AICoach({
                       borderBottomRightRadius: "4px",
                     }
                   : {
-                      backgroundColor: "#1A1918",
-                      color: "#D4CFC6",
+                      backgroundColor: "#EDE8DC",
+                      color: "#3A3A44",
                       borderBottomLeftRadius: "4px",
                     }
               }
@@ -211,14 +211,14 @@ export default function AICoach({
           <div className="flex justify-start">
             <div
               className="rounded-2xl px-4 py-3 flex gap-1 items-center"
-              style={{ backgroundColor: "#1A1918", borderBottomLeftRadius: "4px" }}
+              style={{ backgroundColor: "#EDE8DC", borderBottomLeftRadius: "4px" }}
             >
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
                   className="w-1.5 h-1.5 rounded-full animate-bounce"
                   style={{
-                    backgroundColor: "#6B6560",
+                    backgroundColor: "#908F99",
                     animationDelay: `${i * 150}ms`,
                   }}
                 />
@@ -239,7 +239,7 @@ export default function AICoach({
       {/* Outgrowing CTA (subtle) */}
       <div
         className="mb-3 px-4 py-3 rounded-xl flex items-center justify-between"
-        style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
+        style={{ backgroundColor: "#F4F0E7", border: "1px solid #D8D4C8" }}
       >
         <p className="text-text-subtle text-xs">
           Need deeper strategy support?
@@ -279,7 +279,7 @@ export default function AICoach({
             placeholder={`Ask about ${workspace.business_name}...`}
             disabled={sending}
             className="flex-1 px-4 py-3 rounded-xl text-sm text-text-primary placeholder:text-text-ghost disabled:opacity-50"
-            style={{ backgroundColor: "#141312", border: "1px solid #2A2825" }}
+            style={{ backgroundColor: "#F4F0E7", border: "1px solid #C4C1BB" }}
           />
           <button
             type="submit"
