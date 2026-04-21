@@ -391,6 +391,18 @@ export default function IntakeForm({
       <p className="text-xs text-center" style={{ color: "#4A4540" }}>
         Takes about 30 seconds. You&apos;ll get a private link by email.
       </p>
+      <p className="text-[11px] text-center leading-relaxed" style={{ color: "#4A4540" }}>
+        By submitting, you agree to the{" "}
+        <a href="/terms" target="_blank" rel="noopener" className="underline">
+          Terms
+        </a>{" "}
+        and{" "}
+        <a href="/privacy" target="_blank" rel="noopener" className="underline">
+          Privacy Policy
+        </a>
+        . Your answers and AI coach messages are processed by Anthropic (Claude API) to build and
+        personalize your workspace.
+      </p>
     </form>
   );
 }

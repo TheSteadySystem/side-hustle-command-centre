@@ -123,7 +123,9 @@ If the email landed in your Promotions or Spam folder, drag it to Primary so you
 Reply to this email any time. I read every one.
 
 Carley
-The Steady System`;
+The Steady System
+
+A quick note: your command centre is AI-generated. Review pricing, content, and coach suggestions before publishing or acting on them. Not legal, financial, or tax advice. All sales final once your workspace is delivered. Full terms: https://sidehustlecommandcentre.com/terms`;
 }
 
 function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string): string {
@@ -142,7 +144,8 @@ function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string): 
 <p>When you open it the first time, tap "Generate My Runway" on the Launch Runway tab to build your personalized plan. It takes about 30 seconds. Then the AI coach (50 included messages) will know your business and can guide you from there.</p>
 <p>If the email landed in your Promotions or Spam folder, drag it to Primary so you can find it later.</p>
 <p>Reply to this email any time. I read every one.</p>
-<p>Carley<br>The Steady System</p>`;
+<p>Carley<br>The Steady System</p>
+<p style="color:#6B6A75;font-size:12px;margin-top:18px;">A quick note: your command centre is AI-generated. Review pricing, content, and coach suggestions before publishing or acting on them. Not legal, financial, or tax advice. All sales final once your workspace is delivered. <a href="https://sidehustlecommandcentre.com/terms">Full terms</a>.</p>`;
 }
 
 // ---------------------------------------------------------------------------

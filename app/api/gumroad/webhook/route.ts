@@ -101,7 +101,9 @@ If this email landed in Promotions or Spam, drag it to Primary so you can find i
 Any questions? Reply to this email and I'll answer personally.
 
 Carley
-The Steady System`;
+The Steady System
+
+Digital product, delivered instantly by email. All sales final once your workspace is generated. Your command centre is AI-generated, review everything before acting on it. Full terms: https://sidehustlecommandcentre.com/terms`;
 
   const safeName = firstName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const html = `<p>${safeName ? `Hi ${safeName},` : "Hi,"}</p>
@@ -111,7 +113,8 @@ The Steady System`;
 <p>It takes about 3 minutes. The AI will build your launch runway, 30-day content plan, and everything else based on your answers.</p>
 <p>If this email landed in Promotions or Spam, drag it to Primary so you can find it later.</p>
 <p>Any questions? Reply to this email and I'll answer personally.</p>
-<p>Carley<br>The Steady System</p>`;
+<p>Carley<br>The Steady System</p>
+<p style="color:#6B6A75;font-size:12px;margin-top:18px;">Digital product, delivered instantly by email. All sales final once your workspace is generated. Your command centre is AI-generated, review everything before acting on it. <a href="https://sidehustlecommandcentre.com/terms">Full terms</a>.</p>`;
 
   try {
     const result = await resend.emails.send({

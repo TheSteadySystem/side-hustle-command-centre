@@ -276,6 +276,25 @@ export default function WorkspacePage({
             />
           )}
         </main>
+
+        <footer
+          className="px-4 sm:px-6 lg:px-8 py-6 text-center"
+          style={{ borderTop: "1px solid var(--border, rgba(30,30,36,0.10))" }}
+        >
+          <p className="text-[11px] leading-relaxed text-text-subtle max-w-2xl mx-auto">
+            Content in this workspace is AI-generated and may contain errors. Review everything
+            before publishing or acting on it. Not a substitute for legal, financial, or tax
+            advice. See{" "}
+            <a href="/terms" target="_blank" rel="noopener" className="underline">
+              Terms
+            </a>{" "}
+            and{" "}
+            <a href="/privacy" target="_blank" rel="noopener" className="underline">
+              Privacy
+            </a>
+            .
+          </p>
+        </footer>
       </div>
 
       {messagePackOpen && (
