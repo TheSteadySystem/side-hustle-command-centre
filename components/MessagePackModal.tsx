@@ -99,7 +99,7 @@ export default function MessagePackModal({ token, onClose }: Props) {
             className="w-full py-3 rounded-xl font-semibold text-sm disabled:opacity-50 transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand-color)", color: "#0C0B0A" }}
           >
-            {loading ? "Opening checkout..." : "Buy Messages — $5"}
+            {loading ? "Opening checkout..." : "Buy Messages · $5"}
           </button>
           <button
             onClick={onClose}

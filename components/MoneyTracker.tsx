@@ -118,7 +118,7 @@ export default function MoneyTracker({ workspace, updateWorkspace }: Props) {
     setSaving(false);
   };
 
-  // Build chart data — group entries by month
+  // Build chart data: group entries by month
   const chartData = buildChartData(entries, goal);
 
   return (

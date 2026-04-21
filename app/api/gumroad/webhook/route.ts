@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resend } from "@/lib/resend";
 
-// Gumroad Ping webhook — fires on every sale.
+// Gumroad Ping webhook , fires on every sale.
 //
 // Configure in Gumroad Advanced settings:
 //   URL: https://www.sidehustlecommandcentre.com/api/gumroad/webhook?key=SECRET
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 
 Thanks for your order of ${productName || "Side Hustle Command Centre"}!
 
-One more step to build your personalized command centre — answer 13 quick questions about your business:
+One more step to build your personalized command centre. Answer 13 quick questions about your business:
 
 ${intakeUrl}
 
@@ -100,18 +100,18 @@ If this email landed in Promotions or Spam, drag it to Primary so you can find i
 
 Any questions? Reply to this email and I'll answer personally.
 
-— Carley
+Carley
 The Steady System`;
 
   const safeName = firstName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const html = `<p>${safeName ? `Hi ${safeName},` : "Hi,"}</p>
 <p>Thanks for your order of ${productName.replace(/</g, "&lt;")}!</p>
-<p>One more step to build your personalized command centre &mdash; answer 13 quick questions about your business:</p>
+<p>One more step to build your personalized command centre. Answer 13 quick questions about your business:</p>
 <p><a href="${intakeUrl}">${intakeUrl}</a></p>
 <p>It takes about 3 minutes. The AI will build your launch runway, 30-day content plan, and everything else based on your answers.</p>
 <p>If this email landed in Promotions or Spam, drag it to Primary so you can find it later.</p>
 <p>Any questions? Reply to this email and I'll answer personally.</p>
-<p>&mdash; Carley<br>The Steady System</p>`;
+<p>Carley<br>The Steady System</p>`;
 
   try {
     const result = await resend.emails.send({
@@ -127,7 +127,7 @@ The Steady System`;
     console.log("GUMROAD WEBHOOK: email queued", result);
   } catch (err) {
     console.error("GUMROAD WEBHOOK: email send failed", err);
-    // Return 200 anyway — Gumroad will retry failed webhooks and we
+    // Return 200 anyway , Gumroad will retry failed webhooks and we
     // don't want a duplicate email if our Resend hiccupped.
   }
 

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!workspace) return {};
 
   return {
-    title: `${workspace.business_name} — Side Hustle Command Centre`,
+    title: `${workspace.business_name} · Side Hustle Command Centre`,
     description: workspace.tagline ?? "Built with Side Hustle Command Centre",
     openGraph: {
       title: workspace.business_name,
@@ -125,7 +125,7 @@ export default async function SharePage({ params }: Props) {
           className="inline-block px-6 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
           style={{ backgroundColor: brandColor, color: "#0C0B0A" }}
         >
-          Get Your Command Centre — $297
+          Get Your Command Centre · $117
         </Link>
       </div>
     </div>

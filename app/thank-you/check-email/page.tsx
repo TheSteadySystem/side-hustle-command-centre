@@ -23,7 +23,7 @@ export default function CheckEmailPage({ searchParams }: Props) {
         <div>
           <h1 className="text-3xl font-bold">Your command centre is ready.</h1>
           <p className="mt-4 text-base leading-relaxed" style={{ color: "#D4CFC6" }}>
-            Check your inbox — we just sent you a private link from{" "}
+            Check your inbox. We just sent you a private link from{" "}
             <span style={{ color: "#B8860B" }}>hello@thesteadysystem.com</span>.
           </p>
           <p className="mt-3 text-sm" style={{ color: "#8A8478" }}>

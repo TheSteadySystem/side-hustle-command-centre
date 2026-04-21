@@ -3,14 +3,14 @@ import { CheckCircle, Zap, BarChart2, Calendar, MessageCircle, Layout, Star } fr
 import BuyButton from "@/components/BuyButton";
 
 export const metadata: Metadata = {
-  title: "Side Hustle Command Centre — Your AI-Powered Business Launch System",
+  title: "Side Hustle Command Centre: Your AI-Powered Business Launch System",
   description:
-    "Stop using generic templates. Get a fully personalized business launch system built around your idea, your goals, and your timeline — in minutes.",
+    "Stop using generic templates. Get a fully personalized business launch system built around your idea, your goals, and your timeline, in minutes.",
 };
 
-// Brand palette — light theme
+// Brand palette (light theme)
 // Ink #1E1E24 (primary text), Stone #E8E4DC (bg), Bronze #7f6720 (primary accent),
-// Violet #b793ff (secondary accent — AI moments only)
+// Violet #b793ff (secondary accent, AI moments only)
 const INK = "#1E1E24";
 const STONE = "#E8E4DC";
 const BRONZE = "#7f6720";
@@ -32,13 +32,13 @@ const MODULES = [
   {
     icon: Layout,
     name: "CEO Dashboard",
-    desc: "Your launch countdown, runway progress, revenue goal, and content streak — all in one place.",
+    desc: "Your launch countdown, runway progress, revenue goal, and content streak. All in one place.",
     ai: false,
   },
   {
     icon: CheckCircle,
     name: "Launch Runway",
-    desc: "A 4-phase, personalized checklist of everything you need to do to launch — specific to your business type.",
+    desc: "A 4-phase, personalized checklist of everything you need to do to launch, specific to your business type.",
     ai: false,
   },
   {
@@ -76,12 +76,12 @@ const HOW_IT_WORKS = [
   {
     step: "02",
     title: "We build your system",
-    desc: "Our AI generates your personalized launch runway, 30-day content plan, pricing guide, and more — instantly.",
+    desc: "Our AI generates your personalized launch runway, 30-day content plan, pricing guide, and more. Instantly.",
   },
   {
     step: "03",
     title: "Get your private link",
-    desc: "Your command centre is emailed to you. Bookmark it. It's your new business HQ — ready to use today.",
+    desc: "Your command centre is emailed to you. Bookmark it. It's your new business HQ, ready to use today.",
   },
 ];
 
@@ -90,8 +90,8 @@ const WHATS_DIFFERENT = [
   "Content prompts that mention your actual products and audience",
   "A launch runway tuned to your experience level and timeline",
   "Pricing recommendations specific to your business category",
-  "An AI coach that skips the generic advice — it knows your context",
-  "One link, always accessible — no app to install, no account to manage",
+  "An AI coach that skips the generic advice. It knows your context",
+  "One link, always accessible. No app to install, no account to manage",
 ];
 
 export default function LandingPage() {
@@ -111,7 +111,7 @@ export default function LandingPage() {
           className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-90"
           style={{ backgroundColor: BRONZE, color: STONE }}
         >
-          Get Access — $275
+          Get Access · $117
         </BuyButton>
       </nav>
 
@@ -135,7 +135,7 @@ export default function LandingPage() {
           style={{ color: TEXT_BODY }}
         >
           Answer 13 questions about your side hustle. Get a fully customized
-          launch system — runway checklist, 30-day content plan, pricing guide,
+          launch system: runway checklist, 30-day content plan, pricing guide,
           money tracker, and an AI coach that knows your business.
         </p>
 
@@ -147,7 +147,7 @@ export default function LandingPage() {
             Build My Command Centre
           </BuyButton>
           <p style={{ color: TEXT_SUBTLE }} className="text-sm">
-            $275 one-time · No subscription · Private link delivered by email
+            $117 one-time · No subscription · Private link delivered by email
           </p>
         </div>
       </section>
@@ -310,7 +310,7 @@ export default function LandingPage() {
               <Star size={28} style={{ color: BRONZE }} />
             </div>
             <p className="text-5xl font-bold mb-1" style={{ color: INK }}>
-              $275
+              $117
             </p>
             <p className="text-sm mb-6" style={{ color: TEXT_SUBTLE }}>
               One-time payment
@@ -355,19 +355,19 @@ export default function LandingPage() {
           {[
             {
               q: "How long does it take to get my command centre?",
-              a: "You fill in the intake form (3 minutes), then your personalized system is generated and emailed to you within a few minutes. No waiting — it's automated.",
+              a: "You fill in the intake form (3 minutes), then your personalized system is generated and emailed to you within a few minutes. No waiting. It's automated.",
             },
             {
               q: "What if my business isn't started yet?",
-              a: "This is built for that. The launch runway is designed to take you from zero to launch — the earlier you start using it, the more value you'll get.",
+              a: "This is built for that. The launch runway is designed to take you from zero to launch. The earlier you start using it, the more value you'll get.",
             },
             {
               q: "Is this a monthly subscription?",
-              a: "No. $275 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
+              a: "No. $117 once. Your command centre link is yours forever. AI message packs are optional and cost $5 for 50 messages when you want them.",
             },
             {
               q: "What kind of businesses is this for?",
-              a: "Handmade products, digital products, services, coaching, food & beverage, fashion, health & wellness, creative services — if you're building a side hustle, this is for you.",
+              a: "Handmade products, digital products, services, coaching, food & beverage, fashion, health & wellness, creative services. If you're building a side hustle, this is for you.",
             },
             {
               q: "What makes the AI coach different from ChatGPT?",
@@ -375,7 +375,7 @@ export default function LandingPage() {
             },
             {
               q: "Can I share my offer card?",
-              a: "Yes. Your offer builder includes a public share link — great for Instagram bios, DMs, or anywhere you want to show what you do.",
+              a: "Yes. Your offer builder includes a public share link. Great for Instagram bios, DMs, or anywhere you want to show what you do.",
             },
           ].map(({ q, a }) => (
             <div
@@ -413,7 +413,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
             style={{ backgroundColor: BRONZE, color: STONE }}
           >
-            Build My Command Centre — $275
+            Build My Command Centre · $117
           </BuyButton>
           <p className="text-xs" style={{ color: TEXT_SUBTLE }}>
             Delivered by email · Private link · Works on any device

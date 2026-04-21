@@ -5,7 +5,9 @@ import { anthropic } from "@/lib/claude";
 export const maxDuration = 60;
 
 function buildPrompt(w: Record<string, unknown>): string {
-  return `You are generating personalized business launch content. Output ONLY valid JSON — no markdown, no preamble, no explanation.
+  return `You are generating personalized business launch content. Output ONLY valid JSON. No markdown, no preamble, no explanation.
+
+STYLE RULES (strict): Never use em dashes anywhere in the generated text. Use commas, periods, colons, or parentheses instead. This rule has no exceptions.
 
 The business:
 - Name: ${w.business_name}
@@ -21,37 +23,37 @@ The business:
 
 Generate a JSON object with these exact keys:
 
-1. "runway" — array of exactly 4 phase objects:
+1. "runway": array of exactly 4 phase objects.
    Each: { "name": string, "items": string[] (3-5 items) }
    Phases must be named: Foundation, Build, Pre-Launch, Launch Week
    Tasks must be SPECIFIC to this business type, not generic advice.
 
-2. "content_prompts" — array of exactly 30 objects:
+2. "content_prompts": array of exactly 30 objects.
    Each: { "day": number, "prompt": string, "platform": string, "type": "Reel"|"Story"|"Carousel"|"Photo"|"Video"|"Post" }
    Prompts must reference the business name, specific products/services, and target audience.
    Distribute evenly across the buyer's selected platforms.
 
-3. "offer_card" — object:
+3. "offer_card": object.
    { "headline": string, "tagline": string, "what": string, "platforms": string }
 
-4. "pricing_guide" — array of exactly 3 objects:
+4. "pricing_guide": array of exactly 3 objects.
    Each: { "tier": "Entry"|"Core"|"Premium", "range": string, "description": string }
    Price ranges must be realistic for this specific business type.
 
-5. "startup_costs" — array of 5-7 objects:
+5. "startup_costs": array of 5-7 objects.
    Each: { "name": string, "amount": number }
    Categories must be specific to this business type.
    Amounts should sum to approximately $${w.startup_budget ?? 500}.
 
-6. "first_customers" — array of exactly 10 objects:
+6. "first_customers": array of exactly 10 objects.
    Each: { "step": number, "action": string, "detail": string, "platform": string }
    These must be SPECIFIC, actionable steps to get the first 10 paying customers.
    Steps should be ordered from easiest/fastest to more advanced.
    Reference the specific platforms they selected, their target audience, and their business type.
-   Do NOT include generic advice like "build a website" or "create social media accounts" — those are in the runway.
+   Do NOT include generic advice like "build a website" or "create social media accounts". Those are in the runway.
    Focus on outreach, conversations, and closing the first sale.
 
-7. "weekly_plan" — object:
+7. "weekly_plan": object.
    { "suggested_hours": number, "blocks": [ { "day": string, "task": string, "minutes": number, "category": "build"|"content"|"outreach"|"admin" } ] }
    Based on their experience level, suggest a realistic weekly hour commitment:
    - "Total beginner": 5 hours/week
@@ -60,11 +62,11 @@ Generate a JSON object with these exact keys:
    Create 5-7 time blocks spread across the week (not all on one day).
    Tasks should be specific to their business and current runway phase.
 
-8. "ready_checklist" — array of exactly 6-8 objects:
+8. "ready_checklist": array of exactly 6-8 objects.
    Each: { "item": string, "category": "product"|"brand"|"sales"|"legal" }
    These are the minimum requirements to start taking money.
    Must be specific to their business type and platforms.
-   Do NOT include aspirational items — focus on the minimum viable sales setup.`;
+   Do NOT include aspirational items. Focus on the minimum viable sales setup.`;
 }
 
 export async function POST(req: NextRequest) {
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest) {
       generated = JSON.parse(cleaned);
     } catch {
       console.error("GENERATE: Claude JSON parse failed:", rawText.substring(0, 300));
-      return NextResponse.json({ error: "Content generation failed — retry" }, { status: 500 });
+      return NextResponse.json({ error: "Content generation failed, retry" }, { status: 500 });
     }
 
     const runway_state = {

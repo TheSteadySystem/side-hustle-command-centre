@@ -340,7 +340,7 @@ function ReadyToSell({
 
       {doneCount === items.length && items.length > 0 && (
         <p className="text-center text-sm font-medium" style={{ color: "var(--brand-color)" }}>
-          You&apos;re ready — go get your first customer!
+          You&apos;re ready. Go get your first customer!
         </p>
       )}
     </div>

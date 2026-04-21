@@ -10,7 +10,7 @@ interface Props {
   showArrow?: boolean;
 }
 
-// Primary buy button — routes the buyer to the Gumroad product page.
+// Primary buy button: routes the buyer to the Gumroad product page.
 // Gumroad handles payment, sends a Ping webhook to /api/gumroad/webhook,
 // and our webhook emails the buyer a magic link to /thank-you where they
 // fill the intake form and their workspace is built.

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 
-// Creates a Stripe Checkout session for the main $275 purchase.
+// Creates a Stripe Checkout session for the main $117 purchase.
 // Called from the landing page CTAs.
 //
 // Success → /thank-you?session_id={CHECKOUT_SESSION_ID}

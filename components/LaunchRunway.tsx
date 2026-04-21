@@ -81,7 +81,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
               Generate your personalized launch runway
             </p>
             <p className="text-text-muted text-sm mt-2 max-w-md mx-auto leading-relaxed">
-              Your AI coach will create a 4-phase launch plan tailored to {workspace.business_name} —
+              Your AI coach will create a 4-phase launch plan tailored to {workspace.business_name}:
               specific tasks, not generic advice. Takes about 30 seconds.
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function LaunchRunway({ workspace, updateWorkspace, onGenerate, i
         </div>
         {progress === 100 && (
           <p className="text-center text-sm mt-3" style={{ color: "var(--brand-color)" }}>
-            Runway complete — you&apos;re ready to launch!
+            Runway complete. You&apos;re ready to launch!
           </p>
         )}
       </div>

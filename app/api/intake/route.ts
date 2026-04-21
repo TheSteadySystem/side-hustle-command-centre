@@ -11,8 +11,8 @@ import { generateSlug, generateToken, resolveColor } from "@/lib/utils";
 // Tally payload: { data: { fields: [{ key, label, value, options? }] } }
 //
 // Dropdowns and multi-selects send:
-//   value: string[]  — array of selected option IDs
-//   options: { id: string; text: string }[]  — all available options
+//   value: string[]  , array of selected option IDs
+//   options: { id: string; text: string }[]  , all available options
 //
 // Plain text/number/date/email fields send value as a scalar.
 // ---------------------------------------------------------------------------
@@ -35,7 +35,7 @@ function extract(fields: TallyField[], ...keywords: string[]): string {
     keywords.some((kw) => f.label?.toLowerCase().includes(kw.toLowerCase()))
   );
   if (!f || f.value === null || f.value === undefined) return "";
-  // Dropdown / single-select — resolve option text
+  // Dropdown / single-select , resolve option text
   if (f.options?.length) return resolveOptions(f)[0] ?? "";
   if (Array.isArray(f.value)) return f.value.join(", ");
   return String(f.value);
@@ -46,7 +46,7 @@ function extractArray(fields: TallyField[], ...keywords: string[]): string[] {
     keywords.some((kw) => f.label?.toLowerCase().includes(kw.toLowerCase()))
   );
   if (!f || !f.value) return [];
-  // Multi-select — resolve all selected option texts
+  // Multi-select , resolve all selected option texts
   if (f.options?.length) return resolveOptions(f);
   if (Array.isArray(f.value)) return f.value.map(String);
   return [String(f.value)];
@@ -62,7 +62,7 @@ function extractNumber(fields: TallyField[], ...keywords: string[]): number | nu
 // Claude content generation prompt
 // ---------------------------------------------------------------------------
 function buildPrompt(intake: Record<string, unknown>): string {
-  return `You are generating personalized business launch content. Output ONLY valid JSON — no markdown, no preamble, no explanation.
+  return `You are generating personalized business launch content. Output ONLY valid JSON , no markdown, no preamble, no explanation.
 
 The business:
 - Name: ${intake.business_name}
@@ -78,24 +78,24 @@ The business:
 
 Generate a JSON object with these exact keys:
 
-1. "runway" — array of exactly 4 phase objects:
+1. "runway" , array of exactly 4 phase objects:
    Each: { "name": string, "items": string[] (3-5 items) }
    Phases must be named: Foundation, Build, Pre-Launch, Launch Week
    Tasks must be SPECIFIC to this business type, not generic advice.
 
-2. "content_prompts" — array of exactly 30 objects:
+2. "content_prompts" , array of exactly 30 objects:
    Each: { "day": number, "prompt": string, "platform": string, "type": "Reel"|"Story"|"Carousel"|"Photo"|"Video"|"Post" }
    Prompts must reference the business name, specific products/services, and target audience.
    Distribute evenly across the buyer's selected platforms.
 
-3. "offer_card" — object:
+3. "offer_card" , object:
    { "headline": string, "tagline": string, "what": string, "platforms": string }
 
-4. "pricing_guide" — array of exactly 3 objects:
+4. "pricing_guide" , array of exactly 3 objects:
    Each: { "tier": "Entry"|"Core"|"Premium", "range": string, "description": string }
    Price ranges must be realistic for this specific business type.
 
-5. "startup_costs" — array of 5-7 objects:
+5. "startup_costs" , array of 5-7 objects:
    Each: { "name": string, "amount": number }
    Categories must be specific to this business type.
    Amounts should sum to approximately $${intake.startup_budget ?? 500}.`;
@@ -104,7 +104,7 @@ Generate a JSON object with these exact keys:
 // ---------------------------------------------------------------------------
 // Welcome email HTML
 // ---------------------------------------------------------------------------
-// Plain-text email (better deliverability — skips Gmail Promotions tab).
+// Plain-text email (better deliverability , skips Gmail Promotions tab).
 // Rules: short, conversational, no marketing language, plain text link,
 // no images, no big buttons, no emojis, no hyped CTA.
 function buildEmailText(intake: Record<string, unknown>, workspaceUrl: string): string {
@@ -114,20 +114,20 @@ Your command centre for ${intake.business_name} is ready. Here's your private li
 
 ${workspaceUrl}
 
-Bookmark it — that's where everything lives (your runway, content calendar, AI coach).
+Bookmark it. That's where everything lives (your runway, content calendar, AI coach).
 
 When you open it the first time, tap "Generate My Runway" on the Launch Runway tab to build your personalized plan. It takes about 30 seconds. Then the AI coach (50 included messages) will know your business and can guide you from there.
 
 If the email landed in your Promotions or Spam folder, drag it to Primary so you can find it later.
 
-Reply to this email any time — I read every one.
+Reply to this email any time. I read every one.
 
-— Carley
+Carley
 The Steady System`;
 }
 
 function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string): string {
-  // Minimal HTML mirroring the plain text — no styles, no layout, no tracking pixels.
+  // Minimal HTML mirroring the plain text , no styles, no layout, no tracking pixels.
   // Keeps the email lightweight and deliverability-friendly.
   const safeBusiness = String(intake.business_name ?? "your business")
     .replace(/</g, "&lt;")
@@ -138,15 +138,15 @@ function buildEmailHtml(intake: Record<string, unknown>, workspaceUrl: string): 
   return `<p>Hi ${safeName},</p>
 <p>Your command centre for ${safeBusiness} is ready. Here's your private link:</p>
 <p><a href="${workspaceUrl}">${workspaceUrl}</a></p>
-<p>Bookmark it &mdash; that's where everything lives (your runway, content calendar, AI coach).</p>
+<p>Bookmark it. That's where everything lives (your runway, content calendar, AI coach).</p>
 <p>When you open it the first time, tap "Generate My Runway" on the Launch Runway tab to build your personalized plan. It takes about 30 seconds. Then the AI coach (50 included messages) will know your business and can guide you from there.</p>
 <p>If the email landed in your Promotions or Spam folder, drag it to Primary so you can find it later.</p>
-<p>Reply to this email any time &mdash; I read every one.</p>
-<p>&mdash; Carley<br>The Steady System</p>`;
+<p>Reply to this email any time. I read every one.</p>
+<p>Carley<br>The Steady System</p>`;
 }
 
 // ---------------------------------------------------------------------------
-// Route handler — creates workspace instantly, NO Claude call here.
+// Route handler , creates workspace instantly, NO Claude call here.
 // Claude content is generated lazily when the user opens their workspace.
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No fields received" }, { status: 400 });
     }
 
-    // 0. Verify payment — accepts EITHER a Stripe session_id OR a Gumroad sale_id.
+    // 0. Verify payment , accepts EITHER a Stripe session_id OR a Gumroad sale_id.
     // Exactly one must be present and verified as paid.
     const sessionId = extract(fields, "session_id");
     const gumroadSaleId = extract(fields, "gumroad_sale_id");
@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
       const recoveredEmail = extract(fields, "email");
       const recoveredName = extract(fields, "first name", "your name");
       console.error(
-        "INTAKE: missing payment identifier — redirecting",
+        "INTAKE: missing payment identifier , redirecting",
         recoveredEmail || "(no email)"
       );
 
@@ -207,7 +207,7 @@ After checkout you'll answer the same questions again (about 3 minutes) and your
 
 If you already paid and something went wrong, just reply to this email and I'll sort it out personally.
 
-— Carley
+Carley
 The Steady System`,
           });
         } catch (err) {
@@ -216,7 +216,7 @@ The Steady System`,
       }
 
       return NextResponse.json(
-        { error: "Payment not verified — missing session or sale ID" },
+        { error: "Payment not verified, missing session or sale ID" },
         { status: 402 }
       );
     }

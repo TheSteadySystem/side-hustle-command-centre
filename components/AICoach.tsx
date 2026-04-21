@@ -137,7 +137,7 @@ export default function AICoach({
         </button>
       </div>
 
-      {/* Coach modes — 2-column grid, only when no conversation */}
+      {/* Coach modes: 2-column grid, only when no conversation */}
       {messages.length === 0 && (
         <div className="pb-4">
           <p className="text-text-subtle text-xs mb-3">What do you need help with?</p>
@@ -236,7 +236,7 @@ export default function AICoach({
         <div ref={bottomRef} />
       </div>
 
-      {/* Outgrowing CTA — subtle */}
+      {/* Outgrowing CTA (subtle) */}
       <div
         className="mb-3 px-4 py-3 rounded-xl flex items-center justify-between"
         style={{ backgroundColor: "#141312", border: "1px solid #1F1E1C" }}
@@ -262,7 +262,7 @@ export default function AICoach({
           className="w-full py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
           style={{ backgroundColor: "var(--brand-color)", color: "var(--brand-text-on-brand)" }}
         >
-          Get 50 more messages — $5
+          Get 50 more messages · $5
         </button>
       ) : (
         <form

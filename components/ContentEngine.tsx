@@ -77,7 +77,7 @@ export default function ContentEngine({ workspace, updateWorkspace, onGenerate, 
               Generate your 30-day content calendar
             </p>
             <p className="text-text-muted text-sm mt-2 max-w-md mx-auto leading-relaxed">
-              Your AI coach will create 30 content prompts for {workspace.business_name} —
+              Your AI coach will create 30 content prompts for {workspace.business_name},
               specific to your audience, distributed across your platforms.
             </p>
           </div>

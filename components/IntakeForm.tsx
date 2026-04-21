@@ -43,9 +43,9 @@ const REVENUE_MODELS = [
 ];
 
 const EXPERIENCE_LEVELS = [
-  "Total beginner — this is brand new",
-  "Some experience — I've dabbled",
-  "Been doing this a while — ready to level up",
+  "Total beginner (this is brand new)",
+  "Some experience (I've dabbled)",
+  "Been doing this a while (ready to level up)",
 ];
 
 interface FormState {
@@ -178,7 +178,7 @@ export default function IntakeForm({
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
 
-      // Success — redirect to a holding page that tells them to check email
+      // Success: redirect to a holding page that tells them to check email
       window.location.href = `/thank-you/check-email?slug=${data.slug}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submission failed");

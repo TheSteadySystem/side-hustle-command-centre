@@ -110,7 +110,7 @@ export default function Dashboard({ workspace, onTabChange }: Props) {
               ? daysUntilLaunch > 0
                 ? `${daysUntilLaunch}d`
                 : "Launched!"
-              : "—"
+              : "..."
           }
           sub={workspace.launch_date ?? "Set a date"}
           icon={Rocket}

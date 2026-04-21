@@ -66,7 +66,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
               Generate your first 10 customers plan
             </p>
             <p className="text-text-muted text-sm mt-2 max-w-md mx-auto leading-relaxed">
-              Your AI coach will create 10 specific outreach steps for {workspace.business_name} —
+              Your AI coach will create 10 specific outreach steps for {workspace.business_name}:
               exact scripts, platform-specific tactics, ordered from easiest to advanced.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function FirstCustomers({ workspace, updateWorkspace, onGenerate,
         </div>
         {doneCount === steps.length && steps.length > 0 && (
           <p className="text-center text-sm mt-3" style={{ color: "var(--brand-color)" }}>
-            All steps complete — time to celebrate your first customers!
+            All steps complete. Time to celebrate your first customers!
           </p>
         )}
       </div>

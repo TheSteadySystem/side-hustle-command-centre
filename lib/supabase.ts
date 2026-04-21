@@ -11,7 +11,7 @@ export function getSupabase() {
     _supabase = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
       // Opt out of Next.js App Router fetch cache. Without this, SELECT
-      // queries can be served stale for the lifetime of the deployment —
+      // queries can be served stale for the lifetime of the deployment ,
       // once trapped a freshly-generated workspace behind a cached empty
       // response, making the app think it still needed generation.
       global: {

@@ -297,12 +297,12 @@ export default function WorkspacePage({
 }
 
 const TAB_LABELS: Record<Tab, string> = {
-  dashboard: "Dashboard — your overall progress and focus items",
-  runway: "Launch Runway — the 4-phase launch plan",
-  customers: "First 10 Customers — specific outreach steps",
-  money: "Money Tracker — revenue and startup costs",
-  content: "Content Engine — 30-day content calendar",
-  offer: "Offer Builder — shareable business card and pricing",
+  dashboard: "Dashboard: your overall progress and focus items",
+  runway: "Launch Runway: the 4-phase launch plan",
+  customers: "First 10 Customers: specific outreach steps",
+  money: "Money Tracker: revenue and startup costs",
+  content: "Content Engine: 30-day content calendar",
+  offer: "Offer Builder: shareable business card and pricing",
   coach: "AI Coach",
 };
 
