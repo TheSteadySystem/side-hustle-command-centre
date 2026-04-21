@@ -152,6 +152,36 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Why this exists */}
+      <section className="px-6 pb-20 max-w-2xl mx-auto">
+        <div
+          className="px-6 sm:px-10 py-10 rounded-2xl"
+          style={{ backgroundColor: SURFACE_HI, border: `1px solid ${BORDER}`, borderLeft: `3px solid ${BRONZE}` }}
+        >
+          <p className="text-xs uppercase tracking-widest mb-4" style={{ color: BRONZE }}>
+            Why this exists
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-5">
+            Your business is in tabs, and you're still starting over every Monday.
+          </h2>
+          <div className="space-y-4 text-base sm:text-lg leading-relaxed" style={{ color: TEXT_BODY }}>
+            <p>
+              Your Notes app has 40 half-ideas. Your camera roll has brand moodboards
+              from three different directions. ChatGPT forgot everything you told it
+              yesterday. Pinterest is pretty but it's not a plan.
+            </p>
+            <p>
+              You've taken the workshop, bought the template, done the challenge. You
+              already know what to do. You just need <em>one quiet place</em> where
+              your whole business lives and actually remembers you.
+            </p>
+            <p className="font-semibold" style={{ color: INK }}>
+              That's what this is.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Social proof strip */}
       <div
         className="px-6 py-5"
